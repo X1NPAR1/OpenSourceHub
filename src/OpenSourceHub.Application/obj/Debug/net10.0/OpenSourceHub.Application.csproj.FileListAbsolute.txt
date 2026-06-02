@@ -1,0 +1,15 @@
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\bin\Debug\net10.0\OpenSourceHub.Application.deps.json
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\bin\Debug\net10.0\OpenSourceHub.Application.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\bin\Debug\net10.0\OpenSourceHub.Application.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\bin\Debug\net10.0\OpenSourceHub.Domain.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\bin\Debug\net10.0\OpenSourceHub.Domain.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.csproj.AssemblyReference.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.GeneratedMSBuildEditorConfig.editorconfig
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.AssemblyInfoInputs.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.AssemblyInfo.cs
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.csproj.CoreCompileInputs.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSour.F6AAB458.Up2Date
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\refint\OpenSourceHub.Application.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\OpenSourceHub.Application.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Application\obj\Debug\net10.0\ref\OpenSourceHub.Application.dll

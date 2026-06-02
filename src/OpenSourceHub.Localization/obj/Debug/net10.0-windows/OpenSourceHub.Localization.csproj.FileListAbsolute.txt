@@ -1,0 +1,15 @@
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.GeneratedMSBuildEditorConfig.editorconfig
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.AssemblyInfoInputs.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.AssemblyInfo.cs
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.csproj.CoreCompileInputs.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\bin\Debug\net10.0-windows\OpenSourceHub.Localization.deps.json
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\bin\Debug\net10.0-windows\OpenSourceHub.Localization.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\bin\Debug\net10.0-windows\OpenSourceHub.Localization.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\bin\Debug\net10.0-windows\OpenSourceHub.Domain.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\bin\Debug\net10.0-windows\OpenSourceHub.Domain.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.csproj.AssemblyReference.cache
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSour.A7F4757F.Up2Date
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\refint\OpenSourceHub.Localization.dll
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\OpenSourceHub.Localization.pdb
+F:\Projeler\OpenSourceHub\src\OpenSourceHub.Localization\obj\Debug\net10.0-windows\ref\OpenSourceHub.Localization.dll

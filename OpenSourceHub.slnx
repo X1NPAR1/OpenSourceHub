@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenSourceHub.Application/OpenSourceHub.Application.csproj" />
+    <Project Path="src/OpenSourceHub.Domain/OpenSourceHub.Domain.csproj" />
+    <Project Path="src/OpenSourceHub.Infrastructure/OpenSourceHub.Infrastructure.csproj" />
+    <Project Path="src/OpenSourceHub.Localization/OpenSourceHub.Localization.csproj" />
+    <Project Path="src/OpenSourceHub.Reporting/OpenSourceHub.Reporting.csproj" />
+    <Project Path="src/OpenSourceHub.UI/OpenSourceHub.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OpenSourceHub.Tests/OpenSourceHub.Tests.csproj" />
+  </Folder>
+</Solution>

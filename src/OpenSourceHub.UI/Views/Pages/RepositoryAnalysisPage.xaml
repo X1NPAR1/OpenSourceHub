@@ -1,0 +1,430 @@
+<Page x:Class="OpenSourceHub.UI.Views.Pages.RepositoryAnalysisPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
+      Background="{StaticResource BackgroundBrush}"
+      Title="Repository Analysis">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header + Search -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+            <StackPanel Margin="32,20">
+                <TextBlock Text="{loc:Localization Repo.Analyze}" Style="{StaticResource HeadingStyle}" Margin="0,0,0,16"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
+                             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                             Height="42" FontSize="13" Margin="0,0,8,0"
+                             x:Name="SearchBox">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding AnalyzeCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <Button Grid.Column="1" Content="🔍  Analyze" Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding AnalyzeCommand}" Height="42" MinWidth="120"/>
+                </Grid>
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource ErrorBrush}"
+                           FontSize="12" Margin="0,8,0,0"
+                           Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="32,24">
+
+                <!-- Loading -->
+                <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                            HorizontalAlignment="Center" Margin="0,80">
+                    <TextBlock Text="{Binding StatusMessage}" Style="{StaticResource CaptionStyle}"
+                               HorizontalAlignment="Center" FontSize="14"/>
+                </StackPanel>
+
+                <!-- No results -->
+                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
+                            HorizontalAlignment="Center" Margin="0,80">
+                    <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    <TextBlock Text="Enter a repository URL or owner/repo to analyze"
+                               Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center" FontSize="14"/>
+                    <TextBlock Text="Example: microsoft/vscode or https://github.com/torvalds/linux"
+                               Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                </StackPanel>
+
+                <!-- Results -->
+                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}}">
+
+                    <!-- Repo Header -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Repository.FullName}" FontSize="20" FontWeight="Bold"
+                                               Foreground="{StaticResource BrandPrimaryBrush}" Cursor="Hand"/>
+                                    <Border Margin="12,0,0,0" CornerRadius="4" Padding="8,2"
+                                            Visibility="{Binding Repository.IsArchived, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <Border.Background><SolidColorBrush Color="#D83B01"/></Border.Background>
+                                        <TextBlock Text="ARCHIVED" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                                    </Border>
+                                    <Border Margin="8,0,0,0" CornerRadius="4" Padding="8,2"
+                                            Visibility="{Binding Repository.IsPrivate, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <Border.Background><SolidColorBrush Color="#6A737D"/></Border.Background>
+                                        <TextBlock Text="PRIVATE" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Repository.Description}" Style="{StaticResource BodyTextStyle}"
+                                           Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,12"
+                                           TextTrimming="CharacterEllipsis"
+                                           Visibility="{Binding Repository.Description, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                <WrapPanel>
+                                    <Border CornerRadius="4" Padding="8,3" Margin="0,0,8,4"
+                                            Background="{StaticResource SurfaceBrush}">
+                                        <TextBlock Text="{Binding Repository.Language}" FontSize="11"
+                                                   Foreground="{StaticResource BrandPrimaryBrush}"
+                                                   Visibility="{Binding Repository.Language, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                    </Border>
+                                    <Border CornerRadius="4" Padding="8,3" Margin="0,0,8,4"
+                                            Background="{StaticResource SurfaceBrush}">
+                                        <TextBlock Text="{Binding Repository.License}" FontSize="11"
+                                                   Foreground="{StaticResource SubTextBrush}"
+                                                   Visibility="{Binding Repository.License, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="⭐" FontSize="13" Margin="0,0,4,0"/>
+                                    <TextBlock Text="{Binding Repository.StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                               FontSize="13" Foreground="{StaticResource TextBrush}" Margin="0,0,16,0"/>
+                                    <TextBlock Text="🍴" FontSize="13" Margin="0,0,4,0"/>
+                                    <TextBlock Text="{Binding Repository.ForksCount, Converter={StaticResource NumberToKiloConverter}}"
+                                               FontSize="13" Foreground="{StaticResource TextBrush}" Margin="0,0,16,0"/>
+                                    <TextBlock Text="👁️" FontSize="13" Margin="0,0,4,0"/>
+                                    <TextBlock Text="{Binding Repository.WatchersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                               FontSize="13" Foreground="{StaticResource TextBrush}" Margin="0,0,16,0"/>
+                                    <TextBlock Text="🐛" FontSize="13" Margin="0,0,4,0"/>
+                                    <TextBlock Text="{Binding Repository.OpenIssuesCount}"
+                                               FontSize="13" Foreground="{StaticResource TextBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                                <Button Content="{Binding IsFavorite, Converter={StaticResource FavoriteLabelConverter}}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Command="{Binding ToggleFavoriteCommand}" Margin="0,0,0,8"/>
+                                <Button Content="↗ Open GitHub" Style="{StaticResource GhostButtonStyle}"
+                                        Command="{Binding OpenOnGitHubCommand}" Margin="0,0,0,8"/>
+                                <Button Content="📋 Copy URL" Style="{StaticResource GhostButtonStyle}"
+                                        Command="{Binding CopyCloneUrlCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Analysis Scores -->
+                    <TextBlock Text="Health Scores" Style="{StaticResource SubHeadingStyle}" Margin="0,0,0,12"
+                               Visibility="{Binding Analysis, Converter={StaticResource NullToVisibilityConverter}}"/>
+
+                    <Grid Visibility="{Binding Analysis, Converter={StaticResource NullToVisibilityConverter}}" Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Health -->
+                        <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,8,8">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="{loc:Localization Repo.HealthScore}" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.HealthLevel, Converter={StaticResource HealthLevelToStringConverter}}"
+                                               HorizontalAlignment="Right" FontSize="11" FontWeight="SemiBold"
+                                               Foreground="{Binding Analysis.HealthScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                </Grid>
+                                <TextBlock Text="{Binding Analysis.HealthScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.HealthScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.HealthScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.HealthScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Maintenance -->
+                        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource CardStyle}" Margin="4,0,4,8">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.MaintenanceScore}" Style="{StaticResource CaptionStyle}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding Analysis.MaintenanceScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.MaintenanceScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.MaintenanceScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.MaintenanceScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Security -->
+                        <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource CardStyle}" Margin="8,0,0,8">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.SecurityScore}" Style="{StaticResource CaptionStyle}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding Analysis.SecurityScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.SecurityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.SecurityScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.SecurityScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Community -->
+                        <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.CommunityScore}" Style="{StaticResource CaptionStyle}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding Analysis.CommunityScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.CommunityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.CommunityScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.CommunityScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Popularity -->
+                        <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource CardStyle}" Margin="4,0">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.PopularityScore}" Style="{StaticResource CaptionStyle}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding Analysis.PopularityScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.PopularityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.PopularityScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.PopularityScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Activity -->
+                        <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource CardStyle}" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.ActivityScore}" Style="{StaticResource CaptionStyle}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{Binding Analysis.ActivityScore, StringFormat='{}{0:F1}'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{Binding Analysis.ActivityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
+                                <ProgressBar Value="{Binding Analysis.ActivityScore}" Maximum="100"
+                                             Foreground="{Binding Analysis.ActivityScore, Converter={StaticResource HealthScoreToColorConverter}}"
+                                             Style="{StaticResource ScoreBarStyle}" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Documentation & Metrics -->
+                    <Grid Margin="0,0,0,16"
+                          Visibility="{Binding Analysis, Converter={StaticResource NullToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Documentation Checklist -->
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.Documentation}" Style="{StaticResource SubHeadingStyle}"
+                                           FontSize="15" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Analysis.HasReadme, Converter={StaticResource BoolCheckConverter}}"
+                                               FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="README.md" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Analysis.HasContributing, Converter={StaticResource BoolCheckConverter}}"
+                                               FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="CONTRIBUTING.md" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Analysis.HasLicense, Converter={StaticResource BoolCheckConverter}}"
+                                               FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="LICENSE" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="{Binding Analysis.HasCodeOfConduct, Converter={StaticResource BoolCheckConverter}}"
+                                               FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="CODE_OF_CONDUCT.md" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Analysis.HasSecurityPolicy, Converter={StaticResource BoolCheckConverter}}"
+                                               FontSize="16" Margin="0,0,8,0"/>
+                                    <TextBlock Text="SECURITY.md" Style="{StaticResource BodyTextStyle}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Activity Metrics -->
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Activity Metrics" Style="{StaticResource SubHeadingStyle}"
+                                           FontSize="15" Margin="0,0,0,12"/>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Commits/month" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.CommitFrequencyPerMonth}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Active contributors" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.ActiveContributors}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Days since last commit" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.DaysSinceLastCommit}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="Issue close ratio" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.IssueCloseRatio, StringFormat=P0}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,6">
+                                    <TextBlock Text="PR merge ratio" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.PrMergeRatio, StringFormat=P0}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                                <Grid>
+                                    <TextBlock Text="Total releases" Style="{StaticResource CaptionStyle}"/>
+                                    <TextBlock Text="{Binding Analysis.TotalReleases}"
+                                               HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextBrush}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Recommendations & Warnings -->
+                    <Grid Margin="0,0,0,16"
+                          Visibility="{Binding Analysis, Converter={StaticResource NullToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0"
+                                Visibility="{Binding Analysis.Recommendations.Count, Converter={StaticResource ListCountToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.Recommendations}" Style="{StaticResource SubHeadingStyle}"
+                                           FontSize="15" Foreground="{StaticResource BrandPrimaryBrush}" Margin="0,0,0,12"/>
+                                <ItemsControl ItemsSource="{Binding Analysis.Recommendations}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="💡" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Top"/>
+                                                <TextBlock Text="{Binding}" Style="{StaticResource BodyTextStyle}" FontSize="12"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="8,0,0,0"
+                                Visibility="{Binding Analysis.Warnings.Count, Converter={StaticResource ListCountToVisibilityConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="{loc:Localization Repo.Warnings}" Style="{StaticResource SubHeadingStyle}"
+                                           FontSize="15" Foreground="{StaticResource WarningBrush}" Margin="0,0,0,12"/>
+                                <ItemsControl ItemsSource="{Binding Analysis.Warnings}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Style="{StaticResource BodyTextStyle}" FontSize="12"
+                                                       Foreground="{StaticResource WarningBrush}" Margin="0,0,0,8"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- AI Summary -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"
+                            Visibility="{Binding Analysis, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{loc:Localization Repo.AiAnalysis}" Style="{StaticResource SubHeadingStyle}" FontSize="15"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="{loc:Localization AI.Generating}"
+                                            Style="{StaticResource PrimaryButtonStyle}"
+                                            Command="{Binding GenerateAiSummaryCommand}"
+                                            IsEnabled="{Binding IsGeneratingAi, Converter={StaticResource InverseBoolConverter}}"
+                                            FontSize="12" Padding="12,6"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Visibility="{Binding IsGeneratingAi, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBlock Text="Generating AI analysis..." Style="{StaticResource CaptionStyle}"
+                                           HorizontalAlignment="Center" Margin="0,16"/>
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding AiSummary}" Style="{StaticResource BodyTextStyle}" FontSize="13"
+                                       Visibility="{Binding AiSummary, Converter={StaticResource NullToVisibilityConverter}}"
+                                       Margin="0,0,0,8"/>
+
+                            <TextBlock Text="Click 'Generating AI analysis...' to get AI-powered insights about this repository."
+                                       Style="{StaticResource CaptionStyle}"
+                                       Visibility="{Binding AiSummary, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Contributors -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"
+                            Visibility="{Binding Contributors.Count, Converter={StaticResource ListCountToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Localization Repo.Contributors}" Style="{StaticResource SubHeadingStyle}"
+                                       FontSize="15" Margin="0,0,0,12"/>
+                            <ItemsControl ItemsSource="{Binding Contributors}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="32"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Width="28" Height="28" CornerRadius="14"
+                                                    Background="{StaticResource SurfaceBrush}">
+                                                <TextBlock Text="{Binding Login, Converter={StaticResource InitialConverter}}"
+                                                           FontSize="11" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource BrandPrimaryBrush}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding Login}" FontSize="13"
+                                                       Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"
+                                                       Margin="10,0,0,0"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Contributions, StringFormat='{}{0} commits'}"
+                                                       FontSize="11" Foreground="{StaticResource SubTextBrush}"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

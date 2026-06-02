@@ -1,0 +1,49 @@
+<Page x:Class="OpenSourceHub.UI.Views.Pages.LogsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
+      Background="{StaticResource BackgroundBrush}" Title="Logs">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+            <StackPanel Margin="32,20">
+                <Grid Margin="0,0,0,12">
+                    <TextBlock Text="{loc:Localization Logs.Title}" Style="{StaticResource HeadingStyle}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="{loc:Localization Logs.Export}" Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding ExportCommand}" Margin="0,0,8,0"/>
+                        <Button Content="{loc:Localization Logs.Clear}" Style="{StaticResource GhostButtonStyle}"
+                                Command="{Binding ClearCommand}" Foreground="{StaticResource ErrorBrush}"/>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="{loc:Localization Logs.All}" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding FilterCommand}" CommandParameter="All" Margin="0,0,8,0"/>
+                    <Button Content="{loc:Localization Logs.Info}" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding FilterCommand}" CommandParameter="Info" Margin="0,0,8,0"/>
+                    <Button Content="{loc:Localization Logs.Warning}" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding FilterCommand}" CommandParameter="Warning" Margin="0,0,8,0"/>
+                    <Button Content="{loc:Localization Logs.Error}" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding FilterCommand}" CommandParameter="Error"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Logs}" AutoGenerateColumns="False"
+                  Margin="32,16" CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="160"/>
+                <DataGridTextColumn Header="Level" Binding="{Binding Level}" Width="80"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="160"/>
+                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                <DataGridTextColumn Header="Exception" Binding="{Binding Exception}" Width="200"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Page>

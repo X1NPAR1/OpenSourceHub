@@ -1,0 +1,155 @@
+<Page x:Class="OpenSourceHub.UI.Views.Pages.AiPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
+      Background="{StaticResource BackgroundBrush}" Title="AI Insights">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+            <StackPanel Margin="32,20">
+                <TextBlock Text="{loc:Localization AI.Title}" Style="{StaticResource HeadingStyle}" Margin="0,0,0,16"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
+                             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                             Height="42" FontSize="13" Margin="0,0,8,0">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding LoadRepositoryCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <Button Grid.Column="1" Content="🤖  Load Repository" Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding LoadRepositoryCommand}" Height="42"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="32,24">
+
+                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
+                            HorizontalAlignment="Center" Margin="0,80">
+                    <TextBlock Text="🤖" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                    <TextBlock Text="Enter a repository to get AI-powered insights"
+                               Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center" FontSize="14"/>
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}}">
+
+                    <!-- Repo Info Bar -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Repository.FullName}" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{StaticResource BrandPrimaryBrush}"/>
+                            <TextBlock Text=" · " FontSize="16" Foreground="{StaticResource SubTextBrush}" Margin="4,0"/>
+                            <TextBlock Text="{Binding Repository.StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                       FontSize="14" Foreground="{StaticResource SubTextBrush}"/>
+                            <TextBlock Text=" ⭐" FontSize="14" Foreground="#FFD700"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- AI Actions -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="📝 Generate Summary" Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding GenerateSummaryCommand}" Height="40" Margin="0,0,8,0"
+                                IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"/>
+                        <Button Grid.Column="1" Content="💡 Adoption Recommendation" Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding GenerateAdoptionCommand}" Height="40" Margin="4,0"
+                                IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"/>
+                        <Button Grid.Column="2" Content="🔧 Improvement Suggestions" Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding GenerateImprovementsCommand}" Height="40" Margin="8,0,0,0"
+                                IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"/>
+                    </Grid>
+
+                    <StackPanel Visibility="{Binding IsGenerating, Converter={StaticResource BoolToVisibilityConverter}}"
+                                HorizontalAlignment="Center" Margin="0,24">
+                        <TextBlock Text="{loc:Localization AI.Generating}" Style="{StaticResource CaptionStyle}" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Summary -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"
+                            Visibility="{Binding Summary, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{loc:Localization AI.Summary}" Style="{StaticResource SubHeadingStyle}" FontSize="15"/>
+                                <Button Grid.Column="1" Content="{loc:Localization AI.Copy}" Style="{StaticResource GhostButtonStyle}"
+                                        Command="{Binding CopyTextCommand}" CommandParameter="{Binding Summary}"
+                                        HorizontalAlignment="Right" FontSize="12"/>
+                            </Grid>
+                            <TextBlock Text="{Binding Summary}" Style="{StaticResource BodyTextStyle}" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Adoption -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"
+                            Visibility="{Binding AdoptionRecommendation, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{loc:Localization AI.Adoption}" Style="{StaticResource SubHeadingStyle}" FontSize="15"/>
+                                <Button Content="{loc:Localization AI.Copy}" Style="{StaticResource GhostButtonStyle}"
+                                        Command="{Binding CopyTextCommand}" CommandParameter="{Binding AdoptionRecommendation}"
+                                        HorizontalAlignment="Right" FontSize="12"/>
+                            </Grid>
+                            <TextBlock Text="{Binding AdoptionRecommendation}" Style="{StaticResource BodyTextStyle}" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Improvements -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16"
+                            Visibility="{Binding ImprovementSuggestions, Converter={StaticResource NullToVisibilityConverter}}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="{loc:Localization AI.Improvements}" Style="{StaticResource SubHeadingStyle}" FontSize="15"/>
+                                <Button Content="{loc:Localization AI.Copy}" Style="{StaticResource GhostButtonStyle}"
+                                        Command="{Binding CopyTextCommand}" CommandParameter="{Binding ImprovementSuggestions}"
+                                        HorizontalAlignment="Right" FontSize="12"/>
+                            </Grid>
+                            <TextBlock Text="{Binding ImprovementSuggestions}" Style="{StaticResource BodyTextStyle}" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Ask AI -->
+                    <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Localization AI.Ask}" Style="{StaticResource SubHeadingStyle}" FontSize="15" Margin="0,0,0,12"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
+                                         Text="{Binding UserQuestion, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="42" FontSize="13" Margin="0,0,8,0">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Return" Command="{Binding AskQuestionCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                <Button Grid.Column="1" Content="Ask →" Style="{StaticResource PrimaryButtonStyle}"
+                                        Command="{Binding AskQuestionCommand}" Height="42"
+                                        IsEnabled="{Binding IsGenerating, Converter={StaticResource InverseBoolConverter}}"/>
+                            </Grid>
+                            <Border Margin="0,12,0,0" CornerRadius="8" Padding="16" Background="{StaticResource SurfaceBrush}"
+                                    Visibility="{Binding QuestionAnswer, Converter={StaticResource NullToVisibilityConverter}}">
+                                <TextBlock Text="{Binding QuestionAnswer}" Style="{StaticResource BodyTextStyle}" FontSize="13"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,183 @@
+<Page x:Class="OpenSourceHub.UI.Views.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
+      Background="{StaticResource BackgroundBrush}"
+      Title="Dashboard">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,24">
+
+            <!-- Header -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="{Binding WelcomeMessage}" Style="{StaticResource HeadingStyle}" FontSize="26"/>
+                    <TextBlock Text="Here's your GitHub overview" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="↻  Refresh" Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding RefreshCommand}" VerticalAlignment="Top"/>
+            </Grid>
+
+            <!-- Loading -->
+            <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                        HorizontalAlignment="Center" Margin="0,60">
+                <TextBlock Text="Loading dashboard..." Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Stats Grid -->
+            <Grid Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Repos Card -->
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="📁" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalRepositories}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource BrandPrimaryBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.TotalRepos}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Stars Card -->
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="4,0">
+                    <StackPanel>
+                        <TextBlock Text="⭐" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalStars, Converter={StaticResource NumberToKiloConverter}}" FontSize="32" FontWeight="Bold"
+                                   Foreground="#FFD700"/>
+                        <TextBlock Text="{loc:Localization Dashboard.TotalStars}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Forks Card -->
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="4,0">
+                    <StackPanel>
+                        <TextBlock Text="🍴" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalForks, Converter={StaticResource NumberToKiloConverter}}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource SuccessBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.TotalForks}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Issues Card -->
+                <Border Grid.Column="3" Style="{StaticResource CardStyle}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="🐛" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalOpenIssues, Converter={StaticResource NumberToKiloConverter}}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource WarningBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.OpenIssues}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Second row stats -->
+            <Grid Margin="0,12,0,0"
+                  Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="👥" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding Followers}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.Followers}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="4,0">
+                    <StackPanel>
+                        <TextBlock Text="➕" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding Following}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.Following}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="4,0">
+                    <StackPanel>
+                        <TextBlock Text="👁️" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TotalWatchers, Converter={StaticResource NumberToKiloConverter}}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}"/>
+                        <TextBlock Text="Total Watchers" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource CardStyle}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="📊" FontSize="24" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding User.PublicRepos}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{StaticResource BrandAccentBrush}"/>
+                        <TextBlock Text="{loc:Localization Dashboard.PublicRepos}" Style="{StaticResource CaptionStyle}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Top Repositories -->
+            <StackPanel Margin="0,28,0,0"
+                        Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                <TextBlock Text="{loc:Localization Dashboard.TopRepositories}" Style="{StaticResource SubHeadingStyle}" Margin="0,0,0,16"/>
+
+                <ItemsControl ItemsSource="{Binding TopRepositories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding FullName}" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="{StaticResource BrandPrimaryBrush}"/>
+                                        <TextBlock Text="{Binding Description}" Style="{StaticResource CaptionStyle}"
+                                                   Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                            <TextBlock Text="{Binding Language}" FontSize="11"
+                                                       Foreground="{StaticResource SubTextBrush}" Margin="0,0,16,0"/>
+                                            <TextBlock Text="{Binding UpdatedAt, Converter={StaticResource DateToRelativeConverter}}"
+                                                       FontSize="11" Foreground="{StaticResource SubTextBrush}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0">
+                                        <TextBlock Text="⭐" FontSize="12" Margin="0,0,4,0"/>
+                                        <TextBlock Text="{Binding StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                   FontSize="12" Foreground="{StaticResource TextBrush}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
+                                        <TextBlock Text="🍴" FontSize="12" Margin="0,0,4,0"/>
+                                        <TextBlock Text="{Binding ForksCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                   FontSize="12" Foreground="{StaticResource TextBrush}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="🐛" FontSize="12" Margin="0,0,4,0"/>
+                                        <TextBlock Text="{Binding OpenIssuesCount}"
+                                                   FontSize="12" Foreground="{StaticResource TextBrush}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
