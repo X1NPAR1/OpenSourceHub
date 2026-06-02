@@ -21,5 +21,5 @@ public class AppSettings
     public string? ReportsOutputPath { get; set; }
     public bool StartWithWindows { get; set; } = false;
     public bool MinimizeToTray { get; set; } = false;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; }
 }

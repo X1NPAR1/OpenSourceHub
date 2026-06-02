@@ -1,0 +1,43 @@
+# Build outputs
+bin/
+obj/
+release/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# User secrets
+appsettings.*.json
+secrets.json
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+src/**/bin/
+src/**/obj/
+tests/**/bin/
+tests/**/obj/

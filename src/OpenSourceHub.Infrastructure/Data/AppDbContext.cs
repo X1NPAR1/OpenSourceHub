@@ -28,6 +28,10 @@ public class AppDbContext : DbContext
                 v => v == null ? new List<string>() : v.Split("|||", StringSplitOptions.RemoveEmptyEntries).ToList());
         });
 
-        modelBuilder.Entity<AppSettings>().HasData(new AppSettings { Id = 1 });
+        modelBuilder.Entity<AppSettings>().HasData(new AppSettings
+        {
+            Id = 1,
+            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        });
     }
 }
