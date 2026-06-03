@@ -1,203 +1,443 @@
 <Page x:Class="OpenSourceHub.UI.Views.Pages.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
       xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
       xmlns:domain="clr-namespace:OpenSourceHub.Domain.Enums;assembly=OpenSourceHub.Domain"
       Background="{StaticResource BackgroundBrush}" Title="Settings">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="32,24" MaxWidth="800">
-            <TextBlock Text="{loc:Localization Settings.Title}" Style="{StaticResource HeadingStyle}" Margin="0,0,0,24"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- Appearance -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
+        <!-- ═══ HEADER ═══ -->
+        <Border Grid.Row="0" Style="{StaticResource PageHeaderStyle}">
+            <Grid>
                 <StackPanel>
-                    <TextBlock Text="{loc:Localization Settings.Appearance}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,16"/>
+                    <TextBlock Text="{loc:Localization Settings.Title}"
+                               FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
+                    <TextBlock Text="Configure appearance, AI providers, and application preferences"
+                               FontSize="13" Foreground="{StaticResource MutedTextBrush}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Style="{StaticResource GhostButtonStyle}"
+                            Command="{Binding ExportLogsCommand}" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xEDE1;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                       Margin="0,0,7,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Localization Settings.ExportLogs}" FontSize="12"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding ResetCommand}" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE72C;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                       Margin="0,0,7,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Localization Settings.Reset}" FontSize="12"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource PrimaryButtonStyle}" Command="{Binding SaveCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE74E;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                       Margin="0,0,7,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Localization Settings.Save}" FontSize="12"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.Theme}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <ComboBox HorizontalAlignment="Right" Width="200" Style="{StaticResource ModernComboBoxStyle}"
-                                  SelectedValue="{Binding SelectedTheme}" SelectedValuePath="Tag" Height="36">
-                            <ComboBoxItem Content="{loc:Localization Settings.ThemeSystem}" Tag="{x:Static domain:AppTheme.System}"/>
-                            <ComboBoxItem Content="{loc:Localization Settings.ThemeLight}" Tag="{x:Static domain:AppTheme.Light}"/>
-                            <ComboBoxItem Content="{loc:Localization Settings.ThemeDark}" Tag="{x:Static domain:AppTheme.Dark}"/>
-                        </ComboBox>
-                    </Grid>
+        <!-- ═══ CONTENT ═══ -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="36,28" MaxWidth="760">
 
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.Language}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <ComboBox HorizontalAlignment="Right" Width="200" Style="{StaticResource ModernComboBoxStyle}"
-                                  SelectedValue="{Binding SelectedLanguage}" SelectedValuePath="Tag" Height="36">
-                            <ComboBoxItem Content="{loc:Localization Settings.LanguageEn}" Tag="{x:Static domain:AppLanguage.English}"/>
-                            <ComboBoxItem Content="{loc:Localization Settings.LanguageTr}" Tag="{x:Static domain:AppLanguage.Turkish}"/>
-                            <ComboBoxItem Content="{loc:Localization Settings.LanguageRu}" Tag="{x:Static domain:AppLanguage.Russian}"/>
-                        </ComboBox>
-                    </Grid>
+                <!-- ── Appearance ── -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="36" Height="36" CornerRadius="8" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#0D47A1" Offset="0"/>
+                                        <GradientStop Color="#1565C0" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="&#xE771;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Appearance}" FontSize="15"
+                                           FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="Theme, language and animation preferences"
+                                           FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
 
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Theme}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Affects the entire application" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedTheme}"
+                                      SelectedValuePath="Tag" Height="36">
+                                <ComboBoxItem Content="System (Auto)" Tag="{x:Static domain:AppTheme.System}"/>
+                                <ComboBoxItem Content="Dark" Tag="{x:Static domain:AppTheme.Dark}"/>
+                                <ComboBoxItem Content="Light" Tag="{x:Static domain:AppTheme.Light}"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Language}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="UI language — takes effect immediately" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedLanguage}"
+                                      SelectedValuePath="Tag" Height="36">
+                                <ComboBoxItem Content="English" Tag="{x:Static domain:AppLanguage.English}"/>
+                                <ComboBoxItem Content="Türkçe" Tag="{x:Static domain:AppLanguage.Turkish}"/>
+                                <ComboBoxItem Content="Русский" Tag="{x:Static domain:AppLanguage.Russian}"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.EnableAnimations}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Smooth transitions and micro-animations" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding EnableAnimations}"
+                                      Style="{StaticResource ToggleSwitchStyle}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── AI Configuration ── -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="36" Height="36" CornerRadius="8" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#4C1D95" Offset="0"/>
+                                        <GradientStop Color="#7C3AED" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="&#xEBE8;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.AI}" FontSize="15"
+                                           FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="Configure your AI provider for analysis and insights"
+                                           FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.AiProvider}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Choose between cloud or local AI" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedAiProvider}"
+                                      SelectedValuePath="Tag" Height="36">
+                                <ComboBoxItem Content="OpenAI (Cloud)" Tag="{x:Static domain:AiProvider.OpenAI}"/>
+                                <ComboBoxItem Content="Ollama (Local)" Tag="{x:Static domain:AiProvider.Ollama}"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.OpenAiKey}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Your OpenAI API key (sk-...)" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <PasswordBox x:Name="ApiKeyBox" Grid.Column="1"
+                                         Style="{StaticResource ModernPasswordBoxStyle}"
+                                         Height="36" FontSize="12"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.OpenAiModel}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Default: gpt-4o-mini" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding OpenAiModel}" Height="36" FontSize="12"
+                                     FontFamily="{StaticResource MonoFont}"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.OllamaEndpoint}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Default: http://localhost:11434" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding OllamaEndpoint}" Height="36" FontSize="12"
+                                     FontFamily="{StaticResource MonoFont}"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.OllamaModel}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Default: llama3.2" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding OllamaModel}" Height="36" FontSize="12"
+                                     FontFamily="{StaticResource MonoFont}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Cache & Performance ── -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="36" Height="36" CornerRadius="8" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#065F46" Offset="0"/>
+                                        <GradientStop Color="#059669" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="&#xE896;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Cache}" FontSize="15"
+                                           FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="Caching reduces API calls and speeds up analysis"
+                                           FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.EnableCaching}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Cache GitHub API responses" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding EnableCaching}" Style="{StaticResource ToggleSwitchStyle}"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="120"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.CacheDuration}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Minutes to keep cached data" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding CacheDuration}" Height="36" FontSize="13" TextAlignment="Center"/>
+                        </Grid>
+
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Command="{Binding ClearCacheCommand}"
+                                HorizontalAlignment="Left" Padding="18,9">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE74D;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                           Margin="0,0,7,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Localization Settings.ClearCache}" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Reports ── -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="36" Height="36" CornerRadius="8" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#7C2D12" Offset="0"/>
+                                        <GradientStop Color="#EA580C" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="&#xE7C3;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Reports}" FontSize="15"
+                                           FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="Default output path for generated reports"
+                                           FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
+                                     Text="{Binding ReportsOutputPath}" Height="36"
+                                     FontSize="12" Margin="0,0,8,0"/>
+                            <Button Grid.Column="1" Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding BrowseReportsPathCommand}" Height="36" Padding="14,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE8B7;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                               Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Browse" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Notifications & Privacy ── -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Border Width="36" Height="36" CornerRadius="8" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#1D4ED8" Offset="0"/>
+                                        <GradientStop Color="#3B82F6" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource IconFont}" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Notifications &amp; Privacy" FontSize="15"
+                                           FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock Text="Manage notifications, updates and telemetry"
+                                           FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.EnableNotifications}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Show toast notifications for actions and errors" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding EnableNotifications}" Style="{StaticResource ToggleSwitchStyle}"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,14">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.AutoUpdate}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Automatically check for application updates" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding EnableAutoUpdate}" Style="{StaticResource ToggleSwitchStyle}"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
+
+                        <Grid>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localization Settings.Telemetry}" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Send anonymous usage data to improve the app" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding EnableTelemetry}" Style="{StaticResource ToggleSwitchStyle}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── About ── -->
+                <Border CornerRadius="{StaticResource RadiusMD}" BorderThickness="1"
+                        BorderBrush="{StaticResource BorderSubtleBrush}" Margin="0,0,0,40"
+                        Padding="24,20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#0D0D1A" Offset="0"/>
+                            <GradientStop Color="#0A0A14" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <Grid>
-                        <TextBlock Text="{loc:Localization Settings.EnableAnimations}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableAnimations}"
-                                  Style="{StaticResource ModernCheckBoxStyle}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <controls:AppLogoControl Width="40" Height="40" Margin="0,0,18,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="OpenSourceHub" FontSize="16" FontWeight="Bold"
+                                           Foreground="{StaticResource TextBrush}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0">
+                                    <Run Text="Version 1.1.5"/>
+                                    <Run Text=" · "/>
+                                    <Run Text="XinPari Software"/>
+                                    <Run Text=" · "/>
+                                    <Run Text="MIT License"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Text=".NET 10 · WPF · MVVM" HorizontalAlignment="Right"
+                                   VerticalAlignment="Center" FontSize="11"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   FontFamily="{StaticResource MonoFont}"/>
                     </Grid>
-                </StackPanel>
-            </Border>
+                </Border>
 
-            <!-- AI Configuration -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="{loc:Localization Settings.AI}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,16"/>
-
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.AiProvider}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <ComboBox HorizontalAlignment="Right" Width="200" Style="{StaticResource ModernComboBoxStyle}"
-                                  SelectedValue="{Binding SelectedAiProvider}" SelectedValuePath="Tag" Height="36">
-                            <ComboBoxItem Content="OpenAI" Tag="{x:Static domain:AiProvider.OpenAI}"/>
-                            <ComboBoxItem Content="Ollama (Local)" Tag="{x:Static domain:AiProvider.Ollama}"/>
-                        </ComboBox>
-                    </Grid>
-
-                    <Grid Margin="0,0,0,8">
-                        <TextBlock Text="{loc:Localization Settings.OpenAiKey}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
-                    <PasswordBox x:Name="ApiKeyBox" Style="{StaticResource ModernPasswordBoxStyle}" Height="36"
-                                 Margin="0,0,0,12"/>
-
-                    <Grid Margin="0,0,0,8">
-                        <TextBlock Text="{loc:Localization Settings.OpenAiModel}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding OpenAiModel}"
-                             Height="36" Margin="0,0,0,12"/>
-
-                    <Grid Margin="0,0,0,8">
-                        <TextBlock Text="{loc:Localization Settings.OllamaEndpoint}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding OllamaEndpoint}"
-                             Height="36" Margin="0,0,0,12"/>
-
-                    <Grid Margin="0,0,0,8">
-                        <TextBlock Text="{loc:Localization Settings.OllamaModel}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
-                    <TextBox Style="{StaticResource ModernTextBoxStyle}" Text="{Binding OllamaModel}" Height="36"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Cache & Performance -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="{loc:Localization Settings.Cache}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,16"/>
-
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.EnableCaching}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableCaching}"
-                                  Style="{StaticResource ModernCheckBoxStyle}"/>
-                    </Grid>
-
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.CacheDuration}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Right" Width="80" Style="{StaticResource ModernTextBoxStyle}"
-                                 Text="{Binding CacheDuration}" Height="36"/>
-                    </Grid>
-
-                    <Button Content="{loc:Localization Settings.ClearCache}" Style="{StaticResource SecondaryButtonStyle}"
-                            Command="{Binding ClearCacheCommand}" HorizontalAlignment="Left"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Reports -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="{loc:Localization Report.Title}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,16"/>
-                    <Grid Margin="0,0,0,8">
-                        <TextBlock Text="{loc:Localization Settings.ReportsPath}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
-                                 Text="{Binding ReportsOutputPath}" Height="36" Margin="0,0,8,0"/>
-                        <Button Grid.Column="1" Content="{loc:Localization Report.Browse}"
-                                Style="{StaticResource SecondaryButtonStyle}" Command="{Binding BrowseReportsPathCommand}"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- Notifications & Privacy -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="{loc:Localization Settings.Privacy}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,16"/>
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.EnableNotifications}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableNotifications}"
-                                  Style="{StaticResource ModernCheckBoxStyle}"/>
-                    </Grid>
-                    <Grid Margin="0,0,0,12">
-                        <TextBlock Text="{loc:Localization Settings.EnableAutoUpdate}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableAutoUpdate}"
-                                  Style="{StaticResource ModernCheckBoxStyle}"/>
-                    </Grid>
-                    <Grid>
-                        <TextBlock Text="{loc:Localization Settings.EnableTelemetry}" Style="{StaticResource BodyTextStyle}"
-                                   VerticalAlignment="Center"/>
-                        <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableTelemetry}"
-                                  Style="{StaticResource ModernCheckBoxStyle}"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-            <!-- Save Buttons -->
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                <Button Content="{loc:Localization Settings.Save}" Style="{StaticResource PrimaryButtonStyle}"
-                        Command="{Binding SaveCommand}" MinWidth="120" Margin="0,0,12,0"/>
-                <Button Content="{loc:Localization Settings.Reset}" Style="{StaticResource SecondaryButtonStyle}"
-                        Command="{Binding ResetCommand}" MinWidth="120" Margin="0,0,12,0"/>
-                <Button Content="{loc:Localization Settings.ExportLogs}" Style="{StaticResource GhostButtonStyle}"
-                        Command="{Binding ExportLogsCommand}"/>
             </StackPanel>
-
-            <!-- About -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,24,0,0">
-                <StackPanel>
-                    <TextBlock Text="{loc:Localization Settings.About}" Style="{StaticResource SubHeadingStyle}"
-                               FontSize="15" Margin="0,0,0,12"/>
-                    <Grid Margin="0,0,0,6">
-                        <TextBlock Text="Product" Style="{StaticResource CaptionStyle}"/>
-                        <TextBlock Text="OpenSourceHub" HorizontalAlignment="Right" Foreground="{StaticResource TextBrush}" FontSize="13"/>
-                    </Grid>
-                    <Grid Margin="0,0,0,6">
-                        <TextBlock Text="Version" Style="{StaticResource CaptionStyle}"/>
-                        <TextBlock Text="1.1.5" HorizontalAlignment="Right" Foreground="{StaticResource TextBrush}" FontSize="13"/>
-                    </Grid>
-                    <Grid Margin="0,0,0,6">
-                        <TextBlock Text="Publisher" Style="{StaticResource CaptionStyle}"/>
-                        <TextBlock Text="XinPari Software" HorizontalAlignment="Right" Foreground="{StaticResource TextBrush}" FontSize="13"/>
-                    </Grid>
-                    <Grid>
-                        <TextBlock Text="License" Style="{StaticResource CaptionStyle}"/>
-                        <TextBlock Text="MIT" HorizontalAlignment="Right" Foreground="{StaticResource TextBrush}" FontSize="13"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
 </Page>

@@ -11,7 +11,14 @@ public class OpenAiService : IAiService
     private readonly ISettingsService _settings;
     private readonly ILogger<OpenAiService> _logger;
 
-    public bool IsAvailable => true;
+    public bool IsAvailable
+    {
+        get
+        {
+            var s = _settings.GetSettingsAsync().GetAwaiter().GetResult();
+            return !string.IsNullOrWhiteSpace(s.OpenAiApiKey);
+        }
+    }
 
     public OpenAiService(ISettingsService settings, ILogger<OpenAiService> logger)
     {

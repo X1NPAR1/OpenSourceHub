@@ -1,0 +1,84 @@
+<UserControl x:Class="OpenSourceHub.UI.Controls.AnimatedToastControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MaxWidth="360" Opacity="0"
+             RenderTransformOrigin="1,0.5">
+
+    <UserControl.RenderTransform>
+        <TranslateTransform x:Name="SlideTf" X="380"/>
+    </UserControl.RenderTransform>
+
+    <Border x:Name="ToastBorder" CornerRadius="12" Padding="0" Margin="0,0,0,10"
+            BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#141428" Offset="0"/>
+                <GradientStop Color="#10101E" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.5" Color="#000000" Direction="270"/>
+        </Border.Effect>
+
+        <Grid>
+            <!-- Left accent bar -->
+            <Border x:Name="AccentBar" Width="4" CornerRadius="12,0,0,12"
+                    HorizontalAlignment="Left"/>
+
+            <Grid Margin="16,14,14,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon circle -->
+                <Border Grid.Column="0" Width="32" Height="32" CornerRadius="8"
+                        Margin="0,0,12,0" VerticalAlignment="Top">
+                    <Border x:Name="IconBg" CornerRadius="8">
+                        <TextBlock x:Name="IconText" FontSize="15"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Border>
+
+                <!-- Content -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock x:Name="TitleText" FontSize="13" FontWeight="SemiBold"
+                               Foreground="#E2E8F0" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="MessageText" FontSize="12" Foreground="#94A3B8"
+                               TextWrapping="Wrap" MaxWidth="260" LineHeight="17"/>
+                </StackPanel>
+
+                <!-- Close button -->
+                <Button Grid.Column="2" Width="24" Height="24" Content="✕"
+                        VerticalAlignment="Top" Margin="8,0,0,0"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="#475569" FontSize="10" Cursor="Hand"
+                        Click="CloseButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                    CornerRadius="5" Padding="3">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="bd" Property="Background" Value="#252545"/>
+                                    <Setter Property="Foreground" Value="#94A3B8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+            <!-- Progress bar at bottom — countdown -->
+            <Border Height="3" VerticalAlignment="Bottom" CornerRadius="0,0,12,12" HorizontalAlignment="Stretch"
+                    Background="#252545" Margin="4,0"/>
+            <Border x:Name="ProgressFill" Height="3" VerticalAlignment="Bottom"
+                    CornerRadius="0,0,0,12" HorizontalAlignment="Left" Width="360" Margin="4,0">
+                <Border.Opacity>0.8</Border.Opacity>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

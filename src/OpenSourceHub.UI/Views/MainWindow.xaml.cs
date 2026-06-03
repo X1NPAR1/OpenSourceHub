@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using OpenSourceHub.UI.Helpers;
+using OpenSourceHub.UI.Services;
 using OpenSourceHub.UI.ViewModels;
 using OpenSourceHub.UI.Views.Pages;
 using System.Windows;
@@ -13,6 +15,7 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
     private readonly MainViewModel _vm;
     private readonly IServiceProvider _services;
     private Button? _activeNavBtn;
+    private string? _currentTag;
 
     public MainWindow(MainViewModel vm, IServiceProvider services)
     {
@@ -20,6 +23,8 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
         _vm = vm;
         _services = services;
         DataContext = vm;
+
+        NotificationService.Instance.SetContainer(NotifContainer);
     }
 
     public async Task InitializeAsync()
@@ -33,38 +38,43 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
         }
         else
         {
-            var signInPage = _services.GetRequiredService<SignInPage>();
-            var signInVm = _services.GetRequiredService<SignInViewModel>();
-            signInVm.SignedIn += (_, _) =>
-            {
-                NavigateTo("Dashboard");
-                SetActiveNav(DashboardBtn);
-            };
-            MainFrame.Navigate(signInPage);
+            ShowSignIn();
         }
+    }
+
+    private void ShowSignIn()
+    {
+        var signInVm = _services.GetRequiredService<SignInViewModel>();
+        signInVm.SignedIn += (_, _) =>
+        {
+            NavigateTo("Dashboard");
+            SetActiveNav(DashboardBtn);
+        };
+        var page = new SignInPage(signInVm);
+        NavigateWithTransition(page);
     }
 
     private void NavButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button btn)
+        if (sender is not Button btn) return;
+        var tag = btn.Tag as string;
+        if (string.IsNullOrEmpty(tag) || tag == _currentTag) return;
+
+        if (!_vm.IsAuthenticated)
         {
-            var tag = btn.Tag as string;
-            if (!string.IsNullOrEmpty(tag))
-            {
-                if (!_vm.IsAuthenticated)
-                {
-                    var signIn = _services.GetRequiredService<SignInPage>();
-                    MainFrame.Navigate(signIn);
-                    return;
-                }
-                NavigateTo(tag);
-                SetActiveNav(btn);
-            }
+            ShowSignIn();
+            return;
         }
+
+        NavigateTo(tag);
+        SetActiveNav(btn);
     }
 
     private void NavigateTo(string page)
     {
+        _currentTag = page;
+        _vm.CurrentPageTitle = GetPageTitle(page);
+
         Page? target = page switch
         {
             "Dashboard" => _services.GetRequiredService<DashboardPage>(),
@@ -81,9 +91,33 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
             _ => null
         };
 
-        if (target != null)
-            MainFrame.Navigate(target);
+        if (target != null) NavigateWithTransition(target);
     }
+
+    private void NavigateWithTransition(Page page)
+    {
+        PageContainer.Opacity = 0;
+        MainFrame.Navigate(page);
+
+        AnimationHelper.FadeIn(PageContainer, 200);
+        AnimationHelper.SlideInFromBottom(PageContainer, 15, 220);
+    }
+
+    private static string GetPageTitle(string tag) => tag switch
+    {
+        "Dashboard" => "Dashboard",
+        "Analyze" => "Repository Analysis",
+        "Trending" => "Trending",
+        "Compare" => "Compare Repositories",
+        "Organizations" => "Organizations",
+        "Security" => "Security Center",
+        "AI" => "AI Insights",
+        "Favorites" => "Favorites",
+        "Reports" => "Reports",
+        "Logs" => "Application Logs",
+        "Settings" => "Settings",
+        _ => "OpenSourceHub"
+    };
 
     private void SetActiveNav(Button btn)
     {
@@ -95,10 +129,8 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
 
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.ClickCount == 2)
-            ToggleMaximize();
-        else
-            DragMove();
+        if (e.ClickCount == 2) ToggleMaximize();
+        else DragMove();
     }
 
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)
@@ -109,10 +141,10 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
 
     private void ToggleMaximize()
     {
-        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal : WindowState.Maximized;
         MaxButton.Content = WindowState == WindowState.Maximized ? "❐" : "□";
     }
 
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
-        => Close();
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 }

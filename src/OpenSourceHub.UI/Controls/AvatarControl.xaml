@@ -1,0 +1,47 @@
+<UserControl x:Class="OpenSourceHub.UI.Controls.AvatarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="40" Height="40">
+
+    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=Width}"
+          Height="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=Height}">
+
+        <!-- Initials fallback -->
+        <Border x:Name="FallbackBorder" CornerRadius="100">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0078D4" Offset="0"/>
+                    <GradientStop Color="#005A9E" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <TextBlock x:Name="InitialsText" Text="?" FontSize="15" FontWeight="Bold"
+                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- Actual image (shown when loaded) -->
+        <Border x:Name="ImageBorder" CornerRadius="100" Visibility="Collapsed">
+            <Border.OpacityMask>
+                <VisualBrush>
+                    <VisualBrush.Visual>
+                        <Ellipse Width="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=Width}"
+                                 Height="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=Height}"
+                                 Fill="White"/>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </Border.OpacityMask>
+            <Image x:Name="AvatarImage" Stretch="UniformToFill"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Border>
+
+        <!-- Online indicator dot (optional) -->
+        <Ellipse x:Name="OnlineDot" Width="10" Height="10"
+                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                 Margin="0,0,1,1" Visibility="Collapsed">
+            <Ellipse.Fill>
+                <SolidColorBrush Color="#10B981"/>
+            </Ellipse.Fill>
+            <Ellipse.Stroke><SolidColorBrush Color="#0A0A14"/></Ellipse.Stroke>
+            <Ellipse.StrokeThickness>1.5</Ellipse.StrokeThickness>
+        </Ellipse>
+    </Grid>
+</UserControl>

@@ -85,12 +85,21 @@ public partial class RepositoryAnalysisViewModel : BaseViewModel
     private async Task GenerateAiSummaryAsync()
     {
         if (Repository == null) return;
+        var ai = await _aiFactory.GetServiceAsync();
+        if (!ai.IsAvailable)
+        {
+            Notifications.Warning("AI service is not available. Please configure it in Settings.");
+            return;
+        }
         IsGeneratingAi = true;
         try
         {
-            var ai = await _aiFactory.GetServiceAsync();
             AiSummary = await ai.GenerateRepositorySummaryAsync(Repository, Analysis);
-            if (Analysis != null) Analysis.AiSummary = AiSummary;
+            if (Analysis != null)
+            {
+                Analysis.AiSummary = AiSummary;
+                await _repoService.SaveAnalysisAsync(Analysis);
+            }
         }
         catch (Exception ex)
         {

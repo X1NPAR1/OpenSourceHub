@@ -1,137 +1,345 @@
 <Page x:Class="OpenSourceHub.UI.Views.Pages.SignInPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
-      Background="{StaticResource BackgroundBrush}"
-      Title="Sign In">
+      xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
+      Background="{StaticResource BackgroundBrush}" Title="Sign In"
+      Loaded="Page_Loaded">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="480"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Hero left panel -->
-        <Border Grid.Column="0" Grid.ColumnSpan="1">
-            <Border.Background>
+        <!-- ═══ LEFT — Hero Panel ═══ -->
+        <Grid Grid.Column="0">
+            <Grid.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#0D1117" Offset="0"/>
-                    <GradientStop Color="#161B22" Offset="1"/>
+                    <GradientStop Color="#050509" Offset="0"/>
+                    <GradientStop Color="#090912" Offset="1"/>
                 </LinearGradientBrush>
-            </Border.Background>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
-                <TextBlock Text="OpenSourceHub" FontSize="36" FontWeight="Bold"
-                           Foreground="{StaticResource BrandPrimaryBrush}" Margin="0,0,0,8"/>
-                <TextBlock Text="Analyze. Discover. Build Better." FontSize="16"
-                           Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,32"/>
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <TextBlock Text="✓" Foreground="{StaticResource BrandPrimaryBrush}" FontSize="16" Margin="0,0,8,0"/>
-                        <TextBlock Text="Repository Health Analysis" Foreground="{StaticResource TextBrush}" FontSize="14"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <TextBlock Text="✓" Foreground="{StaticResource BrandPrimaryBrush}" FontSize="16" Margin="0,0,8,0"/>
-                        <TextBlock Text="AI-Powered Insights" Foreground="{StaticResource TextBrush}" FontSize="14"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <TextBlock Text="✓" Foreground="{StaticResource BrandPrimaryBrush}" FontSize="16" Margin="0,0,8,0"/>
-                        <TextBlock Text="Security Scanning" Foreground="{StaticResource TextBrush}" FontSize="14"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <TextBlock Text="✓" Foreground="{StaticResource BrandPrimaryBrush}" FontSize="16" Margin="0,0,8,0"/>
-                        <TextBlock Text="Trend Discovery" Foreground="{StaticResource TextBrush}" FontSize="14"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="✓" Foreground="{StaticResource BrandPrimaryBrush}" FontSize="16" Margin="0,0,8,0"/>
-                        <TextBlock Text="Professional Reports" Foreground="{StaticResource TextBrush}" FontSize="14"/>
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-        </Border>
+            </Grid.Background>
 
-        <!-- Sign In Form -->
-        <Border Grid.Column="1" Background="{StaticResource SurfaceBrush}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel VerticalAlignment="Center" Margin="48,60">
+            <!-- Dot grid pattern overlay -->
+            <Rectangle Opacity="0.03">
+                <Rectangle.Fill>
+                    <DrawingBrush TileMode="Tile" Viewport="0,0,28,28" ViewportUnits="Absolute">
+                        <DrawingBrush.Drawing>
+                            <GeometryDrawing>
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry Center="14,14" RadiusX="0.8" RadiusY="0.8"/>
+                                </GeometryDrawing.Geometry>
+                                <GeometryDrawing.Brush><SolidColorBrush Color="White"/></GeometryDrawing.Brush>
+                            </GeometryDrawing>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.Fill>
+            </Rectangle>
 
-                    <!-- Logo -->
-                    <Border Width="64" Height="64" CornerRadius="16"
-                            HorizontalAlignment="Center" Margin="0,0,0,24">
+            <!-- Radial glow -->
+            <Ellipse Width="600" Height="600" HorizontalAlignment="Center" VerticalAlignment="Center"
+                     Opacity="0.05">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#0078D4" Offset="0"/>
+                        <GradientStop Color="Transparent" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Margin="60,0" MaxWidth="500">
+
+                <!-- Logo + Brand -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,40">
+                    <Border Width="70" Height="70" CornerRadius="20" Margin="0,0,20,0" BorderThickness="1">
+                        <Border.BorderBrush>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#1A4080" Offset="0"/>
+                                <GradientStop Color="#0F2040" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.BorderBrush>
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#0078D4" Offset="0"/>
-                                <GradientStop Color="#00BCF2" Offset="1"/>
+                                <GradientStop Color="#0D1E3A" Offset="0"/>
+                                <GradientStop Color="#091428" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <TextBlock Text="OSH" FontSize="20" FontWeight="Bold"
-                                   Foreground="White" HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="24" ShadowDepth="0" Color="#0078D4" Opacity="0.45"/>
+                        </Border.Effect>
+                        <controls:AppLogoControl Width="46" Height="46"
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
-
-                    <TextBlock Text="{loc:Localization Auth.SignIn}" FontSize="24" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextBrush}" HorizontalAlignment="Center"
-                               Margin="0,0,0,8"/>
-                    <TextBlock Text="Connect your GitHub account to get started"
-                               FontSize="13" Foreground="{StaticResource SubTextBrush}"
-                               HorizontalAlignment="Center" Margin="0,0,0,32"/>
-
-                    <!-- Token Input -->
-                    <TextBlock Text="Personal Access Token" FontSize="12" FontWeight="SemiBold"
-                               Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,8"/>
-
-                    <PasswordBox x:Name="TokenBox" Style="{StaticResource ModernPasswordBoxStyle}"
-                                 FontSize="13" Height="42" Margin="0,0,0,4"/>
-
-                    <TextBlock x:Name="TokenError" Text="{Binding TokenError}"
-                               Foreground="{StaticResource ErrorBrush}" FontSize="12"
-                               Margin="0,0,0,8"
-                               Visibility="{Binding TokenError, Converter={StaticResource NullToVisibilityConverter}}"/>
-
-                    <!-- Authenticate Button -->
-                    <Button Content="{loc:Localization Auth.SignInButton}"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Command="{Binding AuthenticateCommand}"
-                            Height="42" FontSize="14" Margin="0,8,0,0"/>
-
-                    <!-- Loading indicator -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0"
-                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <TextBlock Text="Authenticating..." FontSize="12" Foreground="{StaticResource SubTextBrush}"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="OpenSourceHub" FontSize="30" FontWeight="Bold"
+                                   Foreground="White" Margin="0,0,0,5">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#0078D4" Opacity="0.35"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock Text="Analyze. Discover. Build Better." FontSize="13" Foreground="#3A4A5E"/>
                     </StackPanel>
-
-                    <!-- Divider -->
-                    <Border Style="{StaticResource DividerStyle}" Margin="0,24"/>
-
-                    <!-- Help -->
-                    <TextBlock Text="How to get a token:" FontSize="12" FontWeight="SemiBold"
-                               Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,8"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,16">
-                        Go to GitHub Settings → Developer settings → Personal access tokens → Generate new token.
-                        Required scopes: repo, read:org, read:user, user:email
-                    </TextBlock>
-
-                    <Button Content="Generate Token on GitHub →"
-                            Style="{StaticResource GhostButtonStyle}"
-                            Command="{Binding OpenTokenPageCommand}"
-                            HorizontalAlignment="Left" FontSize="12"
-                            Foreground="{StaticResource BrandPrimaryBrush}"/>
-
-                    <!-- Footer -->
-                    <TextBlock Text="OpenSourceHub v1.1.5 · © 2026 XinPari Software"
-                               FontSize="10" Foreground="{StaticResource SubTextBrush}"
-                               HorizontalAlignment="Center" Margin="0,40,0,0"/>
                 </StackPanel>
-            </ScrollViewer>
-        </Border>
 
-        <Border Grid.Column="2">
+                <TextBlock Text="Your professional GitHub intelligence platform"
+                           FontSize="15" Foreground="#4A5A6E" Margin="0,0,0,32"
+                           TextWrapping="Wrap"/>
+
+                <!-- Feature cards -->
+                <Border Style="{StaticResource HeroFeatureCardStyle}" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource FeatureIconStyle}">
+                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#0D47A1" Offset="0"/><GradientStop Color="#1565C0" Offset="1"/></LinearGradientBrush></Border.Background>
+                            <TextBlock Text="&#xF13E;" FontFamily="{StaticResource IconFont}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Deep Repository Analysis" FontSize="13" FontWeight="SemiBold" Foreground="#C8D8E8" Margin="0,0,0,3"/>
+                            <TextBlock Text="Health, security, community &amp; activity scores" FontSize="11" Foreground="#3A4A5E"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource HeroFeatureCardStyle}" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource FeatureIconStyle}">
+                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#4C1D95" Offset="0"/><GradientStop Color="#7C3AED" Offset="1"/></LinearGradientBrush></Border.Background>
+                            <TextBlock Text="&#xEBE8;" FontFamily="{StaticResource IconFont}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="AI-Powered Insights" FontSize="13" FontWeight="SemiBold" Foreground="#C8D8E8" Margin="0,0,0,3"/>
+                            <TextBlock Text="OpenAI &amp; Ollama powered recommendations" FontSize="11" Foreground="#3A4A5E"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource HeroFeatureCardStyle}" Margin="0,0,0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource FeatureIconStyle}">
+                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#065F46" Offset="0"/><GradientStop Color="#059669" Offset="1"/></LinearGradientBrush></Border.Background>
+                            <TextBlock Text="&#xE8D7;" FontFamily="{StaticResource IconFont}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Security &amp; Risk Detection" FontSize="13" FontWeight="SemiBold" Foreground="#C8D8E8" Margin="0,0,0,3"/>
+                            <TextBlock Text="Vulnerability scanning and safety assessment" FontSize="11" Foreground="#3A4A5E"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource HeroFeatureCardStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Style="{StaticResource FeatureIconStyle}">
+                            <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#7C2D12" Offset="0"/><GradientStop Color="#EA580C" Offset="1"/></LinearGradientBrush></Border.Background>
+                            <TextBlock Text="&#xE7C3;" FontFamily="{StaticResource IconFont}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Professional Reports" FontSize="13" FontWeight="SemiBold" Foreground="#C8D8E8" Margin="0,0,0,3"/>
+                            <TextBlock Text="Export PDF, Markdown &amp; HTML reports" FontSize="11" Foreground="#3A4A5E"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="© 2026 XinPari Software · MIT License"
+                           FontSize="11" Foreground="#1E2A38"
+                           HorizontalAlignment="Center" Margin="0,32,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══ RIGHT — Sign In Form ═══ -->
+        <Border Grid.Column="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1,0,0,0">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="#161B22" Offset="0"/>
-                    <GradientStop Color="#0D1117" Offset="1"/>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0C0C18" Offset="0"/>
+                    <GradientStop Color="#090910" Offset="1"/>
                 </LinearGradientBrush>
             </Border.Background>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel VerticalAlignment="Center" Margin="52,0" MaxWidth="380">
+
+                    <!-- Title -->
+                    <StackPanel Margin="0,60,0,40">
+                        <TextBlock Text="Sign in to GitHub" FontSize="26" FontWeight="Bold"
+                                   Foreground="{StaticResource TextBrush}" Margin="0,0,0,8">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="16" ShadowDepth="0" Color="#0078D4" Opacity="0.2"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock Text="Use your Personal Access Token to connect"
+                                   FontSize="13" Foreground="{StaticResource SubTextBrush}"/>
+                    </StackPanel>
+
+                    <!-- Token label -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Border Width="3" Height="14" CornerRadius="2" Margin="0,0,9,0" VerticalAlignment="Center">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#00BCF2" Offset="0"/>
+                                    <GradientStop Color="#0078D4" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="PERSONAL ACCESS TOKEN" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Token field row -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Hidden mode: PasswordBox -->
+                        <PasswordBox x:Name="TokenBox" Grid.Column="0"
+                                     Style="{StaticResource ModernPasswordBoxStyle}"
+                                     Height="46" FontSize="13"
+                                     PasswordChanged="TokenBox_PasswordChanged"
+                                     KeyDown="TokenField_KeyDown"/>
+
+                        <!-- Visible mode: TextBox -->
+                        <TextBox x:Name="TokenTextBox" Grid.Column="0"
+                                 Style="{StaticResource ModernTextBoxStyle}"
+                                 Height="46" FontSize="13" Visibility="Collapsed"
+                                 FontFamily="{StaticResource MonoFont}"
+                                 TextChanged="TokenTextBox_TextChanged"
+                                 KeyDown="TokenField_KeyDown"/>
+
+                        <!-- Show/Hide toggle -->
+                        <Button x:Name="VisToggleBtn" Grid.Column="1"
+                                Width="44" Height="46" Margin="6,0,0,0"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding ToggleTokenVisibilityCommand}"
+                                ToolTip="Show / hide token">
+                            <TextBlock FontFamily="{StaticResource IconFont}" FontSize="15"
+                                       Foreground="{StaticResource SubTextBrush}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="&#xF78D;"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsTokenVisible}" Value="True">
+                                                <Setter Property="Text" Value="&#xE7B3;"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
+
+                        <!-- Open GitHub tokens page -->
+                        <Button Grid.Column="2" Width="44" Height="46" Margin="6,0,0,0"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding OpenTokenPageCommand}"
+                                ToolTip="Generate a new token on GitHub.com">
+                            <TextBlock Text="&#xE71B;" FontFamily="{StaticResource IconFont}"
+                                       FontSize="15" Foreground="{StaticResource BrandPrimaryBrush}"/>
+                        </Button>
+                    </Grid>
+
+                    <!-- Token format hint -->
+                    <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,0">
+                        <Run Text="Tokens start with "/>
+                        <Run Text="ghp_" FontFamily="{StaticResource MonoFont}"
+                             Foreground="{StaticResource BrandAccentBrush}"/>
+                        <Run Text=" or "/>
+                        <Run Text="github_pat_" FontFamily="{StaticResource MonoFont}"
+                             Foreground="{StaticResource BrandAccentBrush}"/>
+                    </TextBlock>
+
+                    <!-- Error panel -->
+                    <Border CornerRadius="{StaticResource RadiusSM}" Padding="14,11"
+                            Margin="0,12,0,0" Background="#1C080A" BorderThickness="1"
+                            Visibility="{Binding TokenError, Converter={StaticResource NullToVisibilityConverter}}">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="#EF4444"/>
+                        </Border.BorderBrush>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource IconFont}"
+                                       Foreground="{StaticResource ErrorBrush}" FontSize="14"
+                                       Margin="0,0,10,0" VerticalAlignment="Top"/>
+                            <TextBlock Text="{Binding TokenError}" Foreground="{StaticResource ErrorBrush}"
+                                       FontSize="12" TextWrapping="Wrap" LineHeight="18"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Sign In button -->
+                    <Button Margin="0,18,0,0" Height="48" FontSize="14" FontWeight="SemiBold"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{Binding AuthenticateCommand}"
+                            IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <controls:LoadingSpinnerControl Width="18" Height="18" Margin="0,0,10,0"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBlock VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <Binding Path="IsLoading" Converter="{StaticResource AuthButtonTextConverter}"/>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Divider -->
+                    <Grid Margin="0,32,0,28">
+                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" VerticalAlignment="Center"/>
+                        <Border HorizontalAlignment="Center" Padding="16,0">
+                            <Border.Background>
+                                <SolidColorBrush Color="#0C0C18"/>
+                            </Border.Background>
+                            <TextBlock Text="How to get a token" FontSize="11"
+                                       Foreground="{StaticResource MutedTextBrush}"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Steps -->
+                    <StackPanel Margin="0,0,0,60">
+                        <Border Style="{StaticResource StepCardStyle}" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource StepNumberStyle}">
+                                    <TextBlock Text="1" FontSize="11" FontWeight="Bold" Foreground="White"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
+                                           Foreground="{StaticResource SubTextBrush}" FontSize="12" MaxWidth="280">
+                                    GitHub → Settings → Developer settings → Personal access tokens
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource StepCardStyle}" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource StepNumberStyle}">
+                                    <TextBlock Text="2" FontSize="11" FontWeight="Bold" Foreground="White"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Foreground="{StaticResource SubTextBrush}" FontSize="12"
+                                               TextWrapping="Wrap" MaxWidth="280">
+                                        <Run Text="Generate token — required scopes:"/>
+                                    </TextBlock>
+                                    <TextBlock Text="repo, read:org, read:user, user:email"
+                                               FontFamily="{StaticResource MonoFont}" FontSize="11"
+                                               Foreground="{StaticResource BrandAccentBrush}" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource StepCardStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource StepNumberStyle}">
+                                    <TextBlock Text="3" FontSize="11" FontWeight="Bold" Foreground="White"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
+                                           Foreground="{StaticResource SubTextBrush}" FontSize="12" MaxWidth="280">
+                                    Paste your token above and click <Run FontWeight="SemiBold"
+                                    Foreground="{StaticResource TextBrush}">Sign in to GitHub</Run>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Page>

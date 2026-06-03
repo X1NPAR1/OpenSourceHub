@@ -27,6 +27,9 @@ public partial class MainViewModel : BaseViewModel
     [ObservableProperty]
     private AppTheme _currentTheme = AppTheme.Dark;
 
+    [ObservableProperty]
+    private string _currentPageTitle = "Dashboard";
+
     public MainViewModel(IGitHubAuthService auth, ISettingsService settings, NavigationService navigation)
     {
         _auth = auth;

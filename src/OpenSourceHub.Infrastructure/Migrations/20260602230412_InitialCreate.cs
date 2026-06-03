@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OpenSourceHub.Infrastructure.Migrations
 {
-    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -178,7 +176,6 @@ namespace OpenSourceHub.Infrastructure.Migrations
                 values: new object[] { 1, 0, 30, true, true, true, true, false, 0, false, "http://localhost:11434", "llama3.2", null, "gpt-4o-mini", null, false, 0, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) });
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

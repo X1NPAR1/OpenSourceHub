@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using OpenSourceHub.Domain.Enums;
 
@@ -50,7 +50,6 @@ public class LocalizationManager : INotifyPropertyChanged
 
     private static Dictionary<string, string> GetEnglishStrings() => new()
     {
-        // Navigation
         ["Nav.Dashboard"] = "Dashboard",
         ["Nav.Repositories"] = "Repositories",
         ["Nav.Analyze"] = "Analyze",
@@ -65,7 +64,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Logs"] = "Logs",
         ["Nav.Settings"] = "Settings",
 
-        // Auth
         ["Auth.SignIn"] = "Sign in with GitHub",
         ["Auth.SignOut"] = "Sign Out",
         ["Auth.EnterToken"] = "Enter GitHub Personal Access Token",
@@ -80,7 +78,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Auth.SwitchAccount"] = "Switch Account",
         ["Auth.ManageTokens"] = "Manage Tokens",
 
-        // Dashboard
         ["Dashboard.Title"] = "Dashboard",
         ["Dashboard.Welcome"] = "Welcome back,",
         ["Dashboard.TotalRepos"] = "Total Repositories",
@@ -98,7 +95,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Dashboard.Contributions"] = "Contributions",
         ["Dashboard.PublicRepos"] = "Public Repositories",
 
-        // Repository
         ["Repo.Analyze"] = "Analyze Repository",
         ["Repo.SearchPlaceholder"] = "Enter owner/repository or URL...",
         ["Repo.Search"] = "Search",
@@ -135,14 +131,12 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Repo.CopyUrl"] = "Copy URL",
         ["Repo.Compare"] = "Compare",
 
-        // Scores
         ["Score.Excellent"] = "Excellent",
         ["Score.Good"] = "Good",
         ["Score.Fair"] = "Fair",
         ["Score.Poor"] = "Poor",
         ["Score.Critical"] = "Critical",
 
-        // Trending
         ["Trending.Title"] = "Trending Repositories",
         ["Trending.Today"] = "Today",
         ["Trending.ThisWeek"] = "This Week",
@@ -152,7 +146,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Trending.Loading"] = "Loading trending repositories...",
         ["Trending.Developers"] = "Trending Developers",
 
-        // Security
         ["Security.Title"] = "Security Center",
         ["Security.Analyze"] = "Security Analysis",
         ["Security.Alerts"] = "Security Alerts",
@@ -167,7 +160,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Security.None"] = "None",
         ["Security.Report"] = "Security Report",
 
-        // AI
         ["AI.Title"] = "AI Insights",
         ["AI.Summary"] = "Repository Summary",
         ["AI.Adoption"] = "Adoption Recommendation",
@@ -181,7 +173,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["AI.Copy"] = "Copy Response",
         ["AI.Regenerate"] = "Regenerate",
 
-        // Organizations
         ["Org.Title"] = "Organizations",
         ["Org.Search"] = "Search Organization",
         ["Org.Members"] = "Members",
@@ -190,7 +181,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Org.NotFound"] = "Organization not found.",
         ["Org.Loading"] = "Loading organization...",
 
-        // Contributors
         ["Contrib.Title"] = "Contributors",
         ["Contrib.Search"] = "Search Contributors",
         ["Contrib.Commits"] = "Commits",
@@ -199,7 +189,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Contrib.TopContributors"] = "Top Contributors",
         ["Contrib.Loading"] = "Loading contributors...",
 
-        // Compare
         ["Compare.Title"] = "Repository Comparison",
         ["Compare.AddRepo"] = "Add Repository",
         ["Compare.Clear"] = "Clear All",
@@ -207,7 +196,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Compare.AddFirst"] = "Add repositories to compare",
         ["Compare.Max"] = "Maximum 4 repositories can be compared",
 
-        // Reports
         ["Report.Title"] = "Reports",
         ["Report.Generate"] = "Generate Report",
         ["Report.Format"] = "Format",
@@ -224,7 +212,6 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Report.Security"] = "Security Report",
         ["Report.Comparison"] = "Comparison Report",
 
-        // Settings
         ["Settings.Title"] = "Settings",
         ["Settings.Appearance"] = "Appearance",
         ["Settings.Language"] = "Language",
@@ -263,14 +250,12 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Settings.CacheCleared"] = "Cache cleared.",
         ["Settings.ExportLogs"] = "Export Logs",
 
-        // Favorites
         ["Favorites.Title"] = "Favorites",
         ["Favorites.Empty"] = "No favorites yet. Analyze a repository and add it to favorites.",
         ["Favorites.Remove"] = "Remove",
         ["Favorites.Note"] = "Add Note",
         ["Favorites.EditNote"] = "Edit Note",
 
-        // Logs
         ["Logs.Title"] = "Application Logs",
         ["Logs.Clear"] = "Clear Logs",
         ["Logs.Export"] = "Export Logs",
@@ -281,14 +266,12 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Logs.Error"] = "Error",
         ["Logs.Empty"] = "No logs to display.",
 
-        // Notifications
         ["Notif.Success"] = "Success",
         ["Notif.Warning"] = "Warning",
         ["Notif.Error"] = "Error",
         ["Notif.Info"] = "Information",
         ["Notif.Close"] = "Close",
 
-        // Common
         ["Common.Loading"] = "Loading...",
         ["Common.Error"] = "An error occurred.",
         ["Common.Retry"] = "Retry",

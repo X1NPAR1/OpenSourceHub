@@ -12,4 +12,5 @@ public interface IRepositoryService
     Task<RepositoryAnalysis> AnalyzeRepositoryAsync(string owner, string name, CancellationToken ct = default);
     Task<List<ContributorInfo>> GetContributorsAsync(string owner, string name, int count = 30, CancellationToken ct = default);
     Task<List<SecurityAlert>> GetSecurityAlertsAsync(string owner, string name, CancellationToken ct = default);
+    Task SaveAnalysisAsync(RepositoryAnalysis analysis, CancellationToken ct = default);
 }

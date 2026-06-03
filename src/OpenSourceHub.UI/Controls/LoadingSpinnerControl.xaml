@@ -1,0 +1,51 @@
+<UserControl x:Class="OpenSourceHub.UI.Controls.LoadingSpinnerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="32" Height="32">
+
+    <UserControl.Resources>
+        <Storyboard x:Key="SpinStory" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="RotTf"
+                Storyboard.TargetProperty="Angle"
+                From="0" To="360"
+                Duration="0:0:0.9"/>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard Storyboard="{StaticResource SpinStory}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <Grid Width="32" Height="32" RenderTransformOrigin="0.5,0.5">
+        <Grid.RenderTransform>
+            <RotateTransform x:Name="RotTf" Angle="0" CenterX="16" CenterY="16"/>
+        </Grid.RenderTransform>
+
+        <!-- Background ring -->
+        <Ellipse Width="30" Height="30" StrokeThickness="2.5"
+                 Stroke="#252545" Fill="Transparent"/>
+
+        <!-- Progress arc (270° span) -->
+        <Path StrokeThickness="2.5" Fill="Transparent"
+              StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+            <Path.Stroke>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0078D4" Offset="0"/>
+                    <GradientStop Color="#00BCF2" Offset="1"/>
+                </LinearGradientBrush>
+            </Path.Stroke>
+            <Path.Data>
+                <!-- Arc from top (270°) to right-bottom, 270° sweep -->
+                <PathGeometry>
+                    <PathFigure StartPoint="16,1">
+                        <ArcSegment Point="1,16" Size="15,15"
+                                    SweepDirection="Clockwise" IsLargeArc="True"/>
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+    </Grid>
+</UserControl>

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using OpenSourceHub.Domain.Entities;
@@ -11,7 +12,7 @@ namespace OpenSourceHub.Infrastructure.GitHub;
 
 public class GitHubAuthService : IGitHubAuthService
 {
-    private readonly AppDbContext _db;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<GitHubAuthService> _logger;
     private GitHubClient? _client;
     private UserProfile? _currentUser;
@@ -20,50 +21,68 @@ public class GitHubAuthService : IGitHubAuthService
     public string? CurrentToken { get; private set; }
     public event EventHandler<UserProfile?>? AuthStateChanged;
 
-    public GitHubAuthService(AppDbContext db, ILogger<GitHubAuthService> logger)
+    public GitHubAuthService(IServiceScopeFactory scopeFactory, ILogger<GitHubAuthService> logger)
     {
-        _db = db;
+        _scopeFactory = scopeFactory;
         _logger = logger;
     }
 
     public Task<string> GetAuthorizationUrlAsync()
     {
-        var url = "https://github.com/settings/tokens/new?description=OpenSourceHub&scopes=repo,read:org,read:user,user:email";
+        const string url = "https://github.com/settings/tokens/new?description=OpenSourceHub&scopes=repo,read:org,read:user,user:email";
         return Task.FromResult(url);
     }
 
     public async Task<UserProfile?> AuthenticateWithTokenAsync(string token, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(token))
+            return null;
+
         try
         {
-            _client = new GitHubClient(new ProductHeaderValue("OpenSourceHub", "1.1.5"))
+            var tempClient = new GitHubClient(new ProductHeaderValue("OpenSourceHub", "1.1.5"))
             {
-                Credentials = new Credentials(token)
+                Credentials = new Credentials(token.Trim())
             };
 
-            var ghUser = await _client.User.Current();
-            var profile = MapToUserProfile(ghUser, token);
+            var ghUser = await tempClient.User.Current();
+            var profile = MapToUserProfile(ghUser, token.Trim());
 
-            var existing = await _db.UserProfiles.FirstOrDefaultAsync(u => u.Login == profile.Login, ct);
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var existing = await db.UserProfiles.FirstOrDefaultAsync(u => u.Login == profile.Login, ct);
             if (existing == null)
-                _db.UserProfiles.Add(profile);
+                db.UserProfiles.Add(profile);
             else
             {
                 UpdateUserProfile(existing, profile);
                 profile = existing;
             }
 
-            await _db.SaveChangesAsync(ct);
+            await db.SaveChangesAsync(ct);
+
+            _client = tempClient;
             _currentUser = profile;
-            CurrentToken = token;
+            CurrentToken = token.Trim();
             AuthStateChanged?.Invoke(this, _currentUser);
             _logger.LogInformation("User {Login} authenticated successfully", profile.Login);
             return profile;
         }
-        catch (Exception ex)
+        catch (AuthorizationException ex)
+        {
+            _logger.LogWarning(ex, "GitHub authorization failed — bad credentials");
+            throw new InvalidOperationException("Invalid or expired GitHub token. Please generate a new token.", ex);
+        }
+        catch (RateLimitExceededException ex)
+        {
+            _logger.LogWarning(ex, "GitHub rate limit exceeded");
+            throw new InvalidOperationException("GitHub API rate limit exceeded. Please wait a moment and try again.", ex);
+        }
+        catch (Exception ex) when (ex is not InvalidOperationException)
         {
             _logger.LogError(ex, "Authentication failed");
-            return null;
+            throw new InvalidOperationException($"Authentication failed: {ex.Message}", ex);
         }
     }
 
@@ -71,27 +90,57 @@ public class GitHubAuthService : IGitHubAuthService
     {
         if (_currentUser != null) return _currentUser;
 
-        var stored = await _db.UserProfiles.Where(u => u.IsActive).OrderByDescending(u => u.TokenSavedAt).FirstOrDefaultAsync(ct);
-        if (stored != null && !string.IsNullOrEmpty(stored.AccessToken))
+        try
         {
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var stored = await db.UserProfiles
+                .Where(u => u.IsActive)
+                .OrderByDescending(u => u.TokenSavedAt)
+                .FirstOrDefaultAsync(ct);
+
+            if (stored == null || string.IsNullOrEmpty(stored.AccessToken))
+                return null;
+
             var decrypted = DecryptToken(stored.AccessToken);
+            if (string.IsNullOrWhiteSpace(decrypted))
+                return null;
+
             return await AuthenticateWithTokenAsync(decrypted, ct);
         }
-        return null;
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Auto-login failed, requiring manual sign-in");
+            return null;
+        }
     }
 
     public async Task SignOutAsync()
     {
-        var user = await _db.UserProfiles.FirstOrDefaultAsync(u => u.IsActive);
-        if (user != null)
+        try
         {
-            user.IsActive = false;
-            await _db.SaveChangesAsync();
+            using var scope = _scopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            var user = await db.UserProfiles.FirstOrDefaultAsync(u => u.IsActive);
+            if (user != null)
+            {
+                user.IsActive = false;
+                await db.SaveChangesAsync();
+            }
         }
-        _currentUser = null;
-        CurrentToken = null;
-        _client = null;
-        AuthStateChanged?.Invoke(this, null);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during sign out");
+        }
+        finally
+        {
+            _currentUser = null;
+            CurrentToken = null;
+            _client = null;
+            AuthStateChanged?.Invoke(this, null);
+        }
     }
 
     private UserProfile MapToUserProfile(Octokit.User ghUser, string token) => new()
@@ -157,7 +206,14 @@ public class GitHubAuthService : IGitHubAuthService
         }
         catch
         {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(encrypted));
+            try
+            {
+                return Encoding.UTF8.GetString(Convert.FromBase64String(encrypted));
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -1,52 +1,52 @@
 using OpenSourceHub.Domain.Enums;
-using System.Collections.ObjectModel;
+using OpenSourceHub.UI.Controls;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace OpenSourceHub.UI.Services;
 
-public class NotificationItem
+public sealed class NotificationService
 {
-    public string Title { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
-    public NotificationType Type { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public bool IsVisible { get; set; } = true;
-}
+    private static readonly NotificationService _instance = new();
+    public static NotificationService Instance => _instance;
 
-public class NotificationService
-{
-    private static NotificationService? _instance;
-    public static NotificationService Instance => _instance ??= new NotificationService();
+    private StackPanel? _container;
 
-    public ObservableCollection<NotificationItem> Notifications { get; } = [];
+    public void SetContainer(StackPanel panel) => _container = panel;
 
     public void Show(string message, NotificationType type = NotificationType.Information, string? title = null)
     {
-        var item = new NotificationItem
+        if (!Application.Current.Dispatcher.CheckAccess())
         {
-            Title = title ?? type.ToString(),
-            Message = message,
-            Type = type
+            Application.Current.Dispatcher.BeginInvoke(() => Show(message, type, title));
+            return;
+        }
+
+        if (_container == null) return;
+
+        var toastTitle = title ?? type switch
+        {
+            NotificationType.Success => "Success",
+            NotificationType.Warning => "Warning",
+            NotificationType.Error => "Error",
+            _ => "Information"
         };
 
-        System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+        var toast = new AnimatedToastControl();
+        toast.Dismissed += (_, _) =>
         {
-            Notifications.Insert(0, item);
-            if (Notifications.Count > 10)
-                Notifications.RemoveAt(Notifications.Count - 1);
-        });
+            Application.Current.Dispatcher.Invoke(() => _container.Children.Remove(toast));
+        };
 
-        Task.Delay(5000).ContinueWith(_ =>
-        {
-            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
-            {
-                item.IsVisible = false;
-                Notifications.Remove(item);
-            });
-        });
+        _container.Children.Insert(0, toast);
+        toast.Show(toastTitle, message, type);
+
+        if (_container.Children.Count > 5)
+            _container.Children.RemoveAt(_container.Children.Count - 1);
     }
 
-    public void Success(string message, string? title = null) => Show(message, NotificationType.Success, title ?? "Success");
-    public void Warning(string message, string? title = null) => Show(message, NotificationType.Warning, title ?? "Warning");
-    public void Error(string message, string? title = null) => Show(message, NotificationType.Error, title ?? "Error");
-    public void Info(string message, string? title = null) => Show(message, NotificationType.Information, title ?? "Information");
+    public void Success(string message, string? title = null) => Show(message, NotificationType.Success, title);
+    public void Warning(string message, string? title = null) => Show(message, NotificationType.Warning, title);
+    public void Error(string message, string? title = null) => Show(message, NotificationType.Error, title);
+    public void Info(string message, string? title = null) => Show(message, NotificationType.Information, title);
 }

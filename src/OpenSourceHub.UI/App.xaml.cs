@@ -1,14 +1,14 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenSourceHub.Domain.Interfaces;
 using OpenSourceHub.Infrastructure;
-using OpenSourceHub.Infrastructure.AI;
 using OpenSourceHub.Reporting.Services;
+using OpenSourceHub.UI.Helpers;
 using OpenSourceHub.UI.Services;
 using OpenSourceHub.UI.ViewModels;
+using OpenSourceHub.UI.Views;
 using OpenSourceHub.UI.Views.Pages;
-using System.Windows;
 
 namespace OpenSourceHub.UI;
 
@@ -31,7 +31,10 @@ public partial class App : System.Windows.Application
             .Build();
 
         await _host.StartAsync();
-        await Infrastructure.DependencyInjection.InitializeDatabaseAsync(_host.Services);
+        await DependencyInjection.InitializeDatabaseAsync(_host.Services);
+
+        var settings = await _host.Services.GetRequiredService<ISettingsService>().GetSettingsAsync();
+        ThemeManager.Apply(settings.Theme);
 
         var bootstrapper = _host.Services.GetRequiredService<IAppBootstrapper>();
         var window = (System.Windows.Window)bootstrapper;
@@ -40,15 +43,14 @@ public partial class App : System.Windows.Application
         await bootstrapper.InitializeAsync();
     }
 
-    private void ConfigureServices(IServiceCollection services)
+    private static void ConfigureServices(IServiceCollection services)
     {
         services.AddInfrastructure();
 
         services.AddScoped<IReportService, ReportService>();
-
         services.AddSingleton<NavigationService>();
 
-        services.AddTransient<MainViewModel>();
+        services.AddSingleton<MainViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<RepositoryAnalysisViewModel>();
         services.AddTransient<TrendingViewModel>();
@@ -62,7 +64,9 @@ public partial class App : System.Windows.Application
         services.AddTransient<LogsViewModel>();
         services.AddTransient<SignInViewModel>();
 
-        services.AddTransient<IAppBootstrapper, Views.MainWindow>();
+        services.AddSingleton<MainWindow>();
+        services.AddSingleton<IAppBootstrapper>(sp => (IAppBootstrapper)sp.GetRequiredService<MainWindow>());
+
         services.AddTransient<DashboardPage>();
         services.AddTransient<RepositoryAnalysisPage>();
         services.AddTransient<TrendingPage>();

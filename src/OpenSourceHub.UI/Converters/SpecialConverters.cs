@@ -46,6 +46,14 @@ public class NotifIconConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+public class AuthButtonTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool b && b ? "Authenticating..." : "Sign In with GitHub";
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 public class ZeroToVisibilityConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

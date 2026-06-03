@@ -26,6 +26,7 @@
             <conv:InitialConverter x:Key="InitialConverter"/>
             <conv:NotifIconConverter x:Key="NotifIconConverter"/>
             <conv:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+            <conv:AuthButtonTextConverter x:Key="AuthButtonTextConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,6 +1,7 @@
 <Page x:Class="OpenSourceHub.UI.Views.Pages.TrendingPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
       xmlns:loc="clr-namespace:OpenSourceHub.Localization;assembly=OpenSourceHub.Localization"
       Background="{StaticResource BackgroundBrush}" Title="Trending">
 
@@ -10,12 +11,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
-                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
-            <StackPanel Margin="32,20">
-                <TextBlock Text="{loc:Localization Trending.Title}" Style="{StaticResource HeadingStyle}" Margin="0,0,0,16"/>
-                <Grid>
+        <!-- ═══ HEADER ═══ -->
+        <Border Grid.Row="0" Style="{StaticResource PageHeaderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,0,0,16">
+                    <TextBlock Text="{loc:Localization Trending.Title}"
+                               FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
+                    <TextBlock Text="Discover what's rising on GitHub right now"
+                               FontSize="13" Foreground="{StaticResource MutedTextBrush}"/>
+                </StackPanel>
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="16"/>
@@ -23,73 +32,137 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <!-- Period Selector -->
+
+                    <!-- Period buttons -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <Button Content="{loc:Localization Trending.Today}" Style="{StaticResource SecondaryButtonStyle}"
-                                Command="{Binding SelectPeriodCommand}" CommandParameter="Daily" Margin="0,0,8,0"/>
-                        <Button Content="{loc:Localization Trending.ThisWeek}" Style="{StaticResource PrimaryButtonStyle}"
-                                Command="{Binding SelectPeriodCommand}" CommandParameter="Weekly" Margin="0,0,8,0"/>
-                        <Button Content="{loc:Localization Trending.ThisMonth}" Style="{StaticResource SecondaryButtonStyle}"
-                                Command="{Binding SelectPeriodCommand}" CommandParameter="Monthly"/>
+                        <Button Content="{loc:Localization Trending.Today}" Margin="0,0,6,0"
+                                Command="{Binding SelectPeriodCommand}" CommandParameter="Daily" Height="36">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedPeriod}" Value="Daily">
+                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Content="{loc:Localization Trending.ThisWeek}" Margin="0,0,6,0"
+                                Command="{Binding SelectPeriodCommand}" CommandParameter="Weekly" Height="36">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedPeriod}" Value="Weekly">
+                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Content="{loc:Localization Trending.ThisMonth}"
+                                Command="{Binding SelectPeriodCommand}" CommandParameter="Monthly" Height="36">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedPeriod}" Value="Monthly">
+                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </StackPanel>
-                    <!-- Language Filter -->
-                    <ComboBox Grid.Column="2" Style="{StaticResource ModernComboBoxStyle}"
+
+                    <!-- Language filter -->
+                    <ComboBox Grid.Column="2" Width="180" Height="36"
                               ItemsSource="{Binding PopularLanguages}"
-                              SelectedItem="{Binding SelectedLanguage}"
-                              Width="160" Height="36"/>
-                    <Button Grid.Column="4" Content="↻ Refresh" Style="{StaticResource SecondaryButtonStyle}"
-                            Command="{Binding LoadCommand}"/>
+                              SelectedItem="{Binding SelectedLanguage}"/>
+
+                    <!-- Refresh -->
+                    <Button Grid.Column="4" Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding LoadCommand}" Height="36" Padding="14,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE72C;" FontFamily="{StaticResource IconFont}" FontSize="13" Margin="0,0,7,0"/>
+                            <TextBlock Text="Refresh"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
-            </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- Content -->
+        <!-- ═══ CONTENT ═══ -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="32,24">
+            <StackPanel Margin="36,28">
+
+                <!-- Loading -->
                 <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
-                            HorizontalAlignment="Center" Margin="0,60">
-                    <TextBlock Text="{loc:Localization Trending.Loading}" Style="{StaticResource CaptionStyle}" FontSize="14"/>
+                            HorizontalAlignment="Center" Margin="0,100">
+                    <controls:LoadingSpinnerControl Width="44" Height="44" HorizontalAlignment="Center" Margin="0,0,0,18"/>
+                    <TextBlock Text="Loading trending repositories..." Style="{StaticResource CaptionStyle}"
+                               HorizontalAlignment="Center" FontSize="14"/>
                 </StackPanel>
 
+                <!-- List -->
                 <ItemsControl ItemsSource="{Binding TrendingRepositories}"
                               Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,10" Padding="20,16">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel>
+
+                                    <!-- Rank indicator accent -->
+                                    <Border Grid.Column="0" Width="4" CornerRadius="2" Margin="0,0,16,0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#00BCF2" Offset="0"/>
+                                                <GradientStop Color="#0078D4" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding FullName}" FontSize="15" FontWeight="SemiBold"
-                                                   Foreground="{StaticResource BrandPrimaryBrush}" Cursor="Hand"/>
-                                        <TextBlock Text="{Binding Description}" Style="{StaticResource CaptionStyle}"
-                                                   Margin="0,6,0,8" TextTrimming="CharacterEllipsis"
+                                                   Foreground="{StaticResource BrandPrimaryBrush}"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,0,0,5" Cursor="Hand"/>
+                                        <TextBlock Text="{Binding Description}" FontSize="12"
+                                                   Foreground="{StaticResource SubTextBrush}"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,0,0,10"
                                                    Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}"/>
-                                        <WrapPanel>
-                                            <Border CornerRadius="4" Padding="8,3" Margin="0,0,8,0"
-                                                    Background="{StaticResource SurfaceBrush}"
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Style="{StaticResource ChipStyle}" Padding="8,3" Margin="0,0,6,0"
                                                     Visibility="{Binding Language, Converter={StaticResource NullToVisibilityConverter}}">
                                                 <TextBlock Text="{Binding Language}" FontSize="11"
-                                                           Foreground="{StaticResource BrandPrimaryBrush}"/>
+                                                           Foreground="{StaticResource BrandAccentBrush}" FontWeight="SemiBold"/>
                                             </Border>
                                             <TextBlock Text="{Binding UpdatedAt, Converter={StaticResource DateToRelativeConverter}}"
-                                                       FontSize="11" Foreground="{StaticResource SubTextBrush}"
+                                                       FontSize="11" Foreground="{StaticResource MutedTextBrush}"
                                                        VerticalAlignment="Center"/>
-                                        </WrapPanel>
+                                        </StackPanel>
                                     </StackPanel>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                            <TextBlock Text="⭐" FontSize="13" Margin="0,0,4,0"/>
-                                            <TextBlock Text="{Binding StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
-                                                       FontSize="13" FontWeight="SemiBold" Foreground="#FFD700"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="🍴" FontSize="13" Margin="0,0,4,0"/>
-                                            <TextBlock Text="{Binding ForksCount, Converter={StaticResource NumberToKiloConverter}}"
-                                                       FontSize="13" Foreground="{StaticResource SubTextBrush}"/>
-                                        </StackPanel>
+
+                                    <!-- Stats -->
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <Border Background="#1A1400" CornerRadius="6" Padding="12,5" Margin="0,0,0,6">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE735;" FontFamily="{StaticResource IconFont}"
+                                                           FontSize="12" Foreground="#FCD34D" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                           FontSize="13" FontWeight="Bold" Foreground="#FCD34D"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#0A1600" CornerRadius="6" Padding="12,5">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="&#xE8F2;" FontFamily="{StaticResource IconFont}"
+                                                           FontSize="12" Foreground="#6EE7B7" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding ForksCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                           FontSize="12" Foreground="#6EE7B7"/>
+                                            </StackPanel>
+                                        </Border>
                                     </StackPanel>
                                 </Grid>
                             </Border>

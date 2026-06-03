@@ -1,9 +1,11 @@
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using OpenSourceHub.Domain.Entities;
 using OpenSourceHub.Domain.Enums;
 using OpenSourceHub.Domain.Interfaces;
+using OpenSourceHub.Infrastructure.Data;
 
 namespace OpenSourceHub.Infrastructure.GitHub;
 
@@ -13,11 +15,13 @@ public class GitHubRepositoryService : IRepositoryService
     private readonly IMemoryCache _cache;
     private readonly ILogger<GitHubRepositoryService> _logger;
     private readonly HttpClient _httpClient;
+    private readonly AppDbContext _db;
 
-    public GitHubRepositoryService(IGitHubAuthService auth, IMemoryCache cache, ILogger<GitHubRepositoryService> logger, HttpClient httpClient)
+    public GitHubRepositoryService(IGitHubAuthService auth, IMemoryCache cache, ILogger<GitHubRepositoryService> logger, HttpClient httpClient, AppDbContext db)
     {
         _auth = auth;
         _cache = cache;
+        _db = db;
         _logger = logger;
         _httpClient = httpClient;
     }
@@ -32,7 +36,7 @@ public class GitHubRepositoryService : IRepositoryService
 
     public async Task<Domain.Entities.RepositoryInfo?> GetRepositoryAsync(string owner, string name, CancellationToken ct = default)
     {
-        var key = $"repo_{owner}_{name}";
+        var key = $"repo||{owner}||{name}";
         if (_cache.TryGetValue(key, out Domain.Entities.RepositoryInfo? cached)) return cached;
 
         try
@@ -52,7 +56,7 @@ public class GitHubRepositoryService : IRepositoryService
 
     public async Task<List<Domain.Entities.RepositoryInfo>> GetUserRepositoriesAsync(string username, RepositorySortBy sort = RepositorySortBy.Stars, int count = 30, CancellationToken ct = default)
     {
-        var key = $"user_repos_{username}_{sort}_{count}";
+        var key = $"user_repos||{username}||{sort}||{count}";
         if (_cache.TryGetValue(key, out List<Domain.Entities.RepositoryInfo>? cached)) return cached!;
 
         try
@@ -117,7 +121,7 @@ public class GitHubRepositoryService : IRepositoryService
 
     public async Task<List<Domain.Entities.RepositoryInfo>> GetTrendingRepositoriesAsync(string? language = null, TrendPeriod period = TrendPeriod.Weekly, int count = 30, CancellationToken ct = default)
     {
-        var key = $"trending_{language}_{period}";
+        var key = $"trending||{language}||{period}";
         if (_cache.TryGetValue(key, out List<Domain.Entities.RepositoryInfo>? cached)) return cached!;
 
         try
@@ -160,10 +164,10 @@ public class GitHubRepositoryService : IRepositoryService
             var repo = await client.Repository.Get(owner, name);
 
             var commitsTask = GetRecentCommitCountAsync(client, owner, name);
-            var contributorsTask = GetContributorCountAsync(client, owner, name);
+            var contributorsTask = GetAllContributorStatsAsync(client, owner, name);
             var issuesTask = GetIssueStatsAsync(client, owner, name);
             var prTask = GetPullRequestStatsAsync(client, owner, name);
-            var releasesTask = GetReleasesCountAsync(client, owner, name);
+            var releasesTask = GetReleaseInfoAsync(client, owner, name);
             var branchesTask = GetBranchCountAsync(client, owner, name);
             var contentsTask = CheckDocumentationAsync(client, owner, name);
 
@@ -172,6 +176,8 @@ public class GitHubRepositoryService : IRepositoryService
             var (openIssues, closedIssues) = await issuesTask;
             var (openPrs, mergedPrs) = await prTask;
             var (hasReadme, hasContrib, hasLicense, hasCodeOfConduct, hasSecurity, hasIssueTemplate, hasPrTemplate) = await contentsTask;
+            var (totalContributors, activeContributors) = await contributorsTask;
+            var (releaseCount, daysSinceLastRelease) = await releasesTask;
 
             var daysSinceLastPush = repo.PushedAt.HasValue
                 ? (int)(DateTime.UtcNow - repo.PushedAt.Value.UtcDateTime).TotalDays
@@ -181,8 +187,8 @@ public class GitHubRepositoryService : IRepositoryService
             var prMergeRatio = (openPrs + mergedPrs) > 0 ? (double)mergedPrs / (openPrs + mergedPrs) : 0.5;
 
             var activityScore = CalculateActivityScore(await commitsTask, daysSinceLastPush, openIssues, openPrs);
-            var maintenanceScore = CalculateMaintenanceScore(daysSinceLastPush, issueCloseRatio, prMergeRatio, await releasesTask);
-            var communityScore = CalculateCommunityScore(repo.StargazersCount, repo.ForksCount, await contributorsTask, hasReadme, hasContrib, hasCodeOfConduct);
+            var maintenanceScore = CalculateMaintenanceScore(daysSinceLastPush, issueCloseRatio, prMergeRatio, releaseCount);
+            var communityScore = CalculateCommunityScore(repo.StargazersCount, repo.ForksCount, totalContributors, hasReadme, hasContrib, hasCodeOfConduct);
             var securityScore = CalculateSecurityScore(hasSecurity, hasLicense, repo.Archived, daysSinceLastPush);
             var popularityScore = CalculatePopularityScore(repo.StargazersCount, repo.ForksCount, repo.SubscribersCount, repo.WatchersCount);
             var healthScore = (activityScore * 0.25 + maintenanceScore * 0.25 + communityScore * 0.2 + securityScore * 0.15 + popularityScore * 0.15);
@@ -198,13 +204,13 @@ public class GitHubRepositoryService : IRepositoryService
                 ActivityScore = Math.Round(activityScore, 1),
                 HealthLevel = GetHealthLevel(healthScore),
                 CommitFrequencyPerMonth = await commitsTask,
-                ActiveContributors = await contributorsTask,
-                TotalContributors = await contributorsTask,
+                ActiveContributors = activeContributors,
+                TotalContributors = totalContributors,
                 OpenIssues = openIssues,
                 ClosedIssues = closedIssues,
                 OpenPullRequests = openPrs,
                 MergedPullRequests = mergedPrs,
-                TotalReleases = await releasesTask,
+                TotalReleases = releaseCount,
                 BranchCount = await branchesTask,
                 HasReadme = hasReadme,
                 HasContributing = hasContrib,
@@ -214,7 +220,7 @@ public class GitHubRepositoryService : IRepositoryService
                 HasIssueTemplates = hasIssueTemplate,
                 HasPrTemplates = hasPrTemplate,
                 DaysSinceLastCommit = daysSinceLastPush,
-                DaysSinceLastRelease = 0,
+                DaysSinceLastRelease = daysSinceLastRelease,
                 IssueCloseRatio = Math.Round(issueCloseRatio, 2),
                 PrMergeRatio = Math.Round(prMergeRatio, 2),
                 Recommendations = BuildRecommendations(hasReadme, hasContrib, hasLicense, hasCodeOfConduct, hasSecurity, daysSinceLastPush, issueCloseRatio),
@@ -332,14 +338,19 @@ public class GitHubRepositoryService : IRepositoryService
         catch { return 0; }
     }
 
-    private static async Task<int> GetContributorCountAsync(GitHubClient client, string owner, string name)
+    private static async Task<(int total, int active)> GetAllContributorStatsAsync(GitHubClient client, string owner, string name)
     {
         try
         {
             var contributors = await client.Repository.Statistics.GetContributors(owner, name);
-            return contributors?.Count ?? 0;
+            if (contributors == null) return (0, 0);
+            var cutoff = DateTimeOffset.UtcNow.AddDays(-90);
+            int total = contributors.Count;
+            int active = contributors.Count(c =>
+                c.Weeks.Any(w => w.Week >= cutoff && w.Commits > 0));
+            return (total, active);
         }
-        catch { return 0; }
+        catch { return (0, 0); }
     }
 
     private static async Task<(int open, int closed)> GetIssueStatsAsync(GitHubClient client, string owner, string name)
@@ -372,14 +383,19 @@ public class GitHubRepositoryService : IRepositoryService
         catch { return (0, 0); }
     }
 
-    private static async Task<int> GetReleasesCountAsync(GitHubClient client, string owner, string name)
+    private static async Task<(int count, int daysSinceLatest)> GetReleaseInfoAsync(GitHubClient client, string owner, string name)
     {
         try
         {
-            var releases = await client.Repository.Release.GetAll(owner, name, new ApiOptions { PageSize = 1, PageCount = 1 });
-            return releases.Count;
+            var releases = await client.Repository.Release.GetAll(owner, name, new ApiOptions { PageSize = 10, PageCount = 1 });
+            if (releases.Count == 0) return (0, 9999);
+            var latest = releases.OrderByDescending(r => r.PublishedAt).First();
+            int days = latest.PublishedAt.HasValue
+                ? (int)(DateTime.UtcNow - latest.PublishedAt.Value.UtcDateTime).TotalDays
+                : 9999;
+            return (releases.Count, days);
         }
-        catch { return 0; }
+        catch { return (0, 9999); }
     }
 
     private static async Task<int> GetBranchCountAsync(GitHubClient client, string owner, string name)
@@ -409,6 +425,22 @@ public class GitHubRepositoryService : IRepositoryService
             }
         }
         catch { }
+
+        try
+        {
+            var githubDir = await client.Repository.Content.GetAllContents(owner, name, ".github");
+            foreach (var item in githubDir)
+            {
+                var n = item.Name.ToLowerInvariant();
+                if (item.Type == ContentType.Dir && n is "issue_template" or "issue-template") issueTemplate = true;
+                if (item.Type == ContentType.Dir && n is "pull_request_template" or "pull-request-template") prTemplate = true;
+                if (n is "security.md" or "security_policy.md") security = true;
+                if (n is "contributing.md") contributing = true;
+                if (n.StartsWith("pull_request_template") || n.StartsWith("pull-request-template")) prTemplate = true;
+            }
+        }
+        catch { }
+
         return (readme, contributing, license, coc, security, issueTemplate, prTemplate);
     }
 
@@ -493,6 +525,30 @@ public class GitHubRepositoryService : IRepositoryService
         if (openIssues > 500) warnings.Add($"⚠️ {openIssues} open issues — may indicate maintenance issues");
         if (securityScore < 30) warnings.Add("⚠️ Low security score — missing critical security documentation");
         return warnings;
+    }
+
+    public async Task SaveAnalysisAsync(RepositoryAnalysis analysis, CancellationToken ct = default)
+    {
+        try
+        {
+            var existing = await _db.RepositoryAnalyses
+                .FirstOrDefaultAsync(a => a.RepositoryFullName == analysis.RepositoryFullName, ct);
+            if (existing != null)
+            {
+                existing.AiSummary = analysis.AiSummary;
+                existing.HealthScore = analysis.HealthScore;
+                existing.AnalyzedAt = analysis.AnalyzedAt;
+            }
+            else
+            {
+                _db.RepositoryAnalyses.Add(analysis);
+            }
+            await _db.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save analysis for {Repo}", analysis.RepositoryFullName);
+        }
     }
 
     private static Domain.Entities.RepositoryInfo MapRepository(Octokit.Repository r) => new()
