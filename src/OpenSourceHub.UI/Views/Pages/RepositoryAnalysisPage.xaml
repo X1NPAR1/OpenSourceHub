@@ -1,4 +1,4 @@
-<Page x:Class="OpenSourceHub.UI.Views.Pages.RepositoryAnalysisPage"
+﻿<Page x:Class="OpenSourceHub.UI.Views.Pages.RepositoryAnalysisPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
@@ -269,7 +269,7 @@
                                     <TextBlock Text="{Binding Analysis.HealthScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.HealthScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.HealthLevel, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.HealthScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.HealthScore}" Maximum="100"
@@ -288,7 +288,7 @@
                                     <TextBlock Text="{Binding Analysis.MaintenanceScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.MaintenanceScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.MaintenanceScore, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.MaintenanceScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.MaintenanceScore}" Maximum="100"
@@ -307,7 +307,7 @@
                                     <TextBlock Text="{Binding Analysis.SecurityScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.SecurityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.SecurityScore, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.SecurityScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.SecurityScore}" Maximum="100"
@@ -326,7 +326,7 @@
                                     <TextBlock Text="{Binding Analysis.CommunityScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.CommunityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.CommunityScore, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.CommunityScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.CommunityScore}" Maximum="100"
@@ -345,7 +345,7 @@
                                     <TextBlock Text="{Binding Analysis.PopularityScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.PopularityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.PopularityScore, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.PopularityScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.PopularityScore}" Maximum="100"
@@ -364,7 +364,7 @@
                                     <TextBlock Text="{Binding Analysis.ActivityScore, StringFormat='{}{0:F0}'}"
                                                FontSize="36" FontWeight="Bold" Margin="0,0,0,4"
                                                Foreground="{Binding Analysis.ActivityScore, Converter={StaticResource HealthScoreToColorConverter}}"/>
-                                    <TextBlock Text="{Binding Analysis.ActivityScore, Converter={StaticResource HealthLevelToStringConverter}}"
+                                    <TextBlock Text="{Binding Analysis.ActivityScore, Converter={StaticResource ScoreToLevelConverter}}"
                                                FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,10"/>
                                     <ProgressBar Style="{StaticResource ScoreBarStyle}"
                                                  Value="{Binding Analysis.ActivityScore}" Maximum="100"
@@ -657,3 +657,4 @@
         </ScrollViewer>
     </Grid>
 </Page>
+

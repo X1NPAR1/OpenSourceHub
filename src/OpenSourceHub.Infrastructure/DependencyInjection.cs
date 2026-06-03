@@ -27,9 +27,9 @@ public static class DependencyInjection
         services.AddHttpClient<OllamaService>();
 
         services.AddSingleton<IGitHubAuthService, GitHubAuthService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddScoped<IRepositoryService, GitHubRepositoryService>();
         services.AddScoped<IOrganizationService, GitHubOrganizationService>();
-        services.AddScoped<ISettingsService, SettingsService>();
         services.AddScoped<ILogService, LogService>();
         services.AddScoped<IFavoriteService, FavoriteService>();
 

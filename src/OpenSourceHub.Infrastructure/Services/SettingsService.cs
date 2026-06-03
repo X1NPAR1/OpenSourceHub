@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenSourceHub.Domain.Entities;
 using OpenSourceHub.Domain.Interfaces;
@@ -8,32 +9,38 @@ namespace OpenSourceHub.Infrastructure.Services;
 
 public class SettingsService : ISettingsService
 {
-    private readonly AppDbContext _db;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<SettingsService> _logger;
     private AppSettings? _cache;
 
     public event EventHandler<AppSettings>? SettingsChanged;
 
-    public SettingsService(AppDbContext db, ILogger<SettingsService> logger)
+    public SettingsService(IServiceScopeFactory scopeFactory, ILogger<SettingsService> logger)
     {
-        _db = db;
+        _scopeFactory = scopeFactory;
         _logger = logger;
     }
 
     public async Task<AppSettings> GetSettingsAsync()
     {
         if (_cache != null) return _cache;
-        _cache = await _db.AppSettings.FirstOrDefaultAsync() ?? new AppSettings { Id = 1 };
+
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        _cache = await db.AppSettings.FirstOrDefaultAsync() ?? new AppSettings { Id = 1 };
         return _cache;
     }
 
     public async Task SaveSettingsAsync(AppSettings settings)
     {
-        var existing = await _db.AppSettings.FirstOrDefaultAsync();
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        var existing = await db.AppSettings.FirstOrDefaultAsync();
         if (existing == null)
         {
             settings.Id = 1;
-            _db.AppSettings.Add(settings);
+            db.AppSettings.Add(settings);
         }
         else
         {
@@ -56,7 +63,7 @@ public class SettingsService : ISettingsService
             existing.UpdatedAt = DateTime.UtcNow;
         }
 
-        await _db.SaveChangesAsync();
+        await db.SaveChangesAsync();
         _cache = settings;
         SettingsChanged?.Invoke(this, settings);
         _logger.LogInformation("Settings saved successfully");

@@ -1,4 +1,4 @@
-<Page x:Class="OpenSourceHub.UI.Views.Pages.SecurityPage"
+﻿<Page x:Class="OpenSourceHub.UI.Views.Pages.SecurityPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
@@ -191,10 +191,7 @@
                                         <!-- Left severity bar -->
                                         <Border Width="5" CornerRadius="4,0,0,4" HorizontalAlignment="Left"
                                                 Background="{Binding RiskLevel, Converter={StaticResource SecurityRiskToColorConverter}}">
-                                            <Border.Effect>
-                                                <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.6"
-                                                    Color="{Binding RiskLevel, Converter={StaticResource SecurityRiskToColorConverter}, ConverterParameter=color}"/>
-                                            </Border.Effect>
+                                            
                                         </Border>
 
                                         <StackPanel Margin="18,16,16,16">
@@ -257,3 +254,4 @@
         </ScrollViewer>
     </Grid>
 </Page>
+

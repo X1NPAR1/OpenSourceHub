@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenSourceHub.Domain.Interfaces;
@@ -9,38 +9,55 @@ using OpenSourceHub.UI.Services;
 using OpenSourceHub.UI.ViewModels;
 using OpenSourceHub.UI.Views;
 using OpenSourceHub.UI.Views.Pages;
+using System.Windows;
 
 namespace OpenSourceHub.UI;
 
-public partial class App : System.Windows.Application
+public partial class App : Application
 {
     private IHost? _host;
 
-    protected override async void OnStartup(System.Windows.StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        try
+        {
+            _host = Host.CreateDefaultBuilder()
+                .UseDefaultServiceProvider(opts =>
+                {
+                    opts.ValidateScopes = false;
+                    opts.ValidateOnBuild = false;
+                })
+                .ConfigureServices(ConfigureServices)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddDebug();
+                    logging.SetMinimumLevel(LogLevel.Information);
+                })
+                .Build();
 
-        _host = Host.CreateDefaultBuilder()
-            .ConfigureServices(ConfigureServices)
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.AddDebug();
-                logging.SetMinimumLevel(LogLevel.Information);
-            })
-            .Build();
+            await _host.StartAsync();
+            await DependencyInjection.InitializeDatabaseAsync(_host.Services);
 
-        await _host.StartAsync();
-        await DependencyInjection.InitializeDatabaseAsync(_host.Services);
+            var settings = await _host.Services.GetRequiredService<ISettingsService>().GetSettingsAsync();
+            ThemeManager.Apply(settings.Theme);
 
-        var settings = await _host.Services.GetRequiredService<ISettingsService>().GetSettingsAsync();
-        ThemeManager.Apply(settings.Theme);
-
-        var bootstrapper = _host.Services.GetRequiredService<IAppBootstrapper>();
-        var window = (System.Windows.Window)bootstrapper;
-        base.MainWindow = window;
-        window.Show();
-        await bootstrapper.InitializeAsync();
+            var bootstrapper = _host.Services.GetRequiredService<IAppBootstrapper>();
+            var window = (Window)bootstrapper;
+            base.MainWindow = window;
+            window.Show();
+            await bootstrapper.InitializeAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"OpenSourceHub başlatılamadı.\n\n{ex.GetType().Name}: {ex.Message}\n\nDetay:\n{ex.InnerException?.Message}",
+                "Başlatma Hatası",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            Shutdown(1);
+        }
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -81,7 +98,7 @@ public partial class App : System.Windows.Application
         services.AddTransient<SignInPage>();
     }
 
-    protected override async void OnExit(System.Windows.ExitEventArgs e)
+    protected override async void OnExit(ExitEventArgs e)
     {
         if (_host != null)
         {

@@ -27,6 +27,8 @@
             <conv:NotifIconConverter x:Key="NotifIconConverter"/>
             <conv:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
             <conv:AuthButtonTextConverter x:Key="AuthButtonTextConverter"/>
+            <conv:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
+            <conv:ScoreToLevelConverter x:Key="ScoreToLevelConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

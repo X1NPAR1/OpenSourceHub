@@ -65,3 +65,34 @@ public class ZeroToVisibilityConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
 }
+
+public class EnumToBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value != null && parameter != null && value.Equals(parameter);
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool b && b ? parameter! : Binding.DoNothing;
+}
+
+public class ScoreToLevelConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        var score = value switch
+        {
+            double d => d,
+            int i => (double)i,
+            _ => 0.0
+        };
+        return score switch
+        {
+            >= 80 => "Excellent",
+            >= 60 => "Good",
+            >= 40 => "Fair",
+            >= 20 => "Poor",
+            _ => "Critical"
+        };
+    }
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
