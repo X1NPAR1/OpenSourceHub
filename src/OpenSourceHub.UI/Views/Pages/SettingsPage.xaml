@@ -112,6 +112,8 @@
                                 <ComboBoxItem Content="English" Tag="{x:Static domain:AppLanguage.English}"/>
                                 <ComboBoxItem Content="Türkçe" Tag="{x:Static domain:AppLanguage.Turkish}"/>
                                 <ComboBoxItem Content="Русский" Tag="{x:Static domain:AppLanguage.Russian}"/>
+                                <ComboBoxItem Content="Deutsch" Tag="{x:Static domain:AppLanguage.German}"/>
+                                <ComboBoxItem Content="Nederlands" Tag="{x:Static domain:AppLanguage.Dutch}"/>
                             </ComboBox>
                         </Grid>
 
@@ -317,7 +319,7 @@
                                            HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.Reports}" FontSize="15"
+                                <TextBlock Text="{loc:Localization Settings.ReportsPath}" FontSize="15"
                                            FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock Text="Default output path for generated reports"
                                            FontSize="11" Foreground="{StaticResource MutedTextBrush}"/>
@@ -381,7 +383,7 @@
 
                         <Grid Margin="0,0,0,14">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.AutoUpdate}" FontSize="13"
+                                <TextBlock Text="{loc:Localization Settings.EnableAutoUpdate}" FontSize="13"
                                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
                                 <TextBlock Text="Automatically check for application updates" FontSize="11"
                                            Foreground="{StaticResource MutedTextBrush}"/>
@@ -394,7 +396,7 @@
 
                         <Grid>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.Telemetry}" FontSize="13"
+                                <TextBlock Text="{loc:Localization Settings.EnableTelemetry}" FontSize="13"
                                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
                                 <TextBlock Text="Send anonymous usage data to improve the app" FontSize="11"
                                            Foreground="{StaticResource MutedTextBrush}"/>
@@ -422,7 +424,7 @@
                                 <TextBlock Text="OpenSourceHub" FontSize="16" FontWeight="Bold"
                                            Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0">
-                                    <Run Text="Version 1.1.5"/>
+                                    <Run Text="{Binding AppVersion, StringFormat='Version {0}'}"/>
                                     <Run Text=" · "/>
                                     <Run Text="XinPari Software"/>
                                     <Run Text=" · "/>

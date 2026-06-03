@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
+using System.Reflection;
 using OpenSourceHub.Domain.Entities;
 using OpenSourceHub.Domain.Enums;
 using OpenSourceHub.Domain.Interfaces;
@@ -31,6 +32,9 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty] private string _reportsOutputPath = string.Empty;
     [ObservableProperty] private bool _startWithWindows;
     [ObservableProperty] private bool _minimizeToTray;
+
+    public string AppVersion { get; } =
+        Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.2.4";
 
     public SettingsViewModel(ISettingsService settings, ILogService logService, IMemoryCache cache)
     {

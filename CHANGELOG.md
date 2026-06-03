@@ -2,6 +2,21 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.4] - 2026-06-03
+
+### Fixed
+- **XamlParseException "FrameworkElement.Style"**: `SettingsCardStyle` had `Effect="{StaticResource ShadowSM}"` — WPF cannot share a single `DropShadowEffect` Freezable instance across multiple elements when all apply it via the same style setter at the same time. Removed the shadow from `SettingsCardStyle`.
+- **Localization keys not resolving in Settings page**: Three wrong keys corrected — `Settings.Reports` → `Settings.ReportsPath`, `Settings.AutoUpdate` → `Settings.EnableAutoUpdate`, `Settings.Telemetry` → `Settings.EnableTelemetry`.
+- **Hardcoded "Version 1.1.5" in Settings About**: Replaced with dynamic binding to `SettingsViewModel.AppVersion` (read from `Assembly.GetExecutingAssembly().GetName().Version`).
+
+### Added
+- **German (Deutsch) language support**: Full translation of all 300+ localization keys.
+- **Dutch (Nederlands) language support**: Full translation of all 300+ localization keys.
+- Language picker in Settings now shows 5 options: English, Türkçe, Русский, Deutsch, Nederlands.
+- `AppLanguage` enum extended with `German` and `Dutch` values.
+
+---
+
 ## [1.2.3] - 2026-06-03
 
 ### Fixed

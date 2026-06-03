@@ -2,7 +2,7 @@ namespace OpenSourceHub.Domain.Enums;
 
 public enum AppTheme { System, Light, Dark }
 
-public enum AppLanguage { English, Turkish, Russian }
+public enum AppLanguage { English, Turkish, Russian, German, Dutch }
 
 public enum RepositoryHealthLevel { Critical, Poor, Fair, Good, Excellent }
 

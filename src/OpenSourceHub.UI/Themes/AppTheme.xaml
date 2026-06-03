@@ -1099,7 +1099,6 @@
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="0,0,0,16"/>
-        <Setter Property="Effect" Value="{StaticResource ShadowSM}"/>
     </Style>
 
     <!-- Toggle switch style (for settings) -->
