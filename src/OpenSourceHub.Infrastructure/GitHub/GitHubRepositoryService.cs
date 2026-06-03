@@ -129,10 +129,10 @@ public class GitHubRepositoryService : IRepositoryService
             var client = CreateClient();
             var since = period switch
             {
-                TrendPeriod.Daily => DateTime.UtcNow.AddDays(-1),
-                TrendPeriod.Weekly => DateTime.UtcNow.AddDays(-7),
-                TrendPeriod.Monthly => DateTime.UtcNow.AddDays(-30),
-                _ => DateTime.UtcNow.AddDays(-7)
+                TrendPeriod.Daily => DateTimeOffset.UtcNow.AddDays(-1),
+                TrendPeriod.Weekly => DateTimeOffset.UtcNow.AddDays(-7),
+                TrendPeriod.Monthly => DateTimeOffset.UtcNow.AddDays(-30),
+                _ => DateTimeOffset.UtcNow.AddDays(-7)
             };
 
             var langFilter = language != null ? $" language:{language}" : "";
@@ -190,7 +190,7 @@ public class GitHubRepositoryService : IRepositoryService
             var maintenanceScore = CalculateMaintenanceScore(daysSinceLastPush, issueCloseRatio, prMergeRatio, releaseCount);
             var communityScore = CalculateCommunityScore(repo.StargazersCount, repo.ForksCount, totalContributors, hasReadme, hasContrib, hasCodeOfConduct);
             var securityScore = CalculateSecurityScore(hasSecurity, hasLicense, repo.Archived, daysSinceLastPush);
-            var popularityScore = CalculatePopularityScore(repo.StargazersCount, repo.ForksCount, repo.SubscribersCount, repo.WatchersCount);
+            var popularityScore = CalculatePopularityScore(repo.StargazersCount, repo.ForksCount, repo.SubscribersCount);
             var healthScore = (activityScore * 0.25 + maintenanceScore * 0.25 + communityScore * 0.2 + securityScore * 0.15 + popularityScore * 0.15);
 
             var analysis = new RepositoryAnalysis
@@ -487,11 +487,11 @@ public class GitHubRepositoryService : IRepositoryService
         return Math.Max(0, Math.Min(score, 100));
     }
 
-    private static double CalculatePopularityScore(int stars, int forks, int subscribers, int watchers)
+    private static double CalculatePopularityScore(int stars, int forks, int subscribers)
     {
         var starScore = Math.Min(Math.Log10(Math.Max(stars, 1)) * 20, 60);
         var forkScore = Math.Min(Math.Log10(Math.Max(forks, 1)) * 15, 25);
-        var watcherScore = Math.Min(Math.Log10(Math.Max(watchers + subscribers, 1)) * 5, 15);
+        var watcherScore = Math.Min(Math.Log10(Math.Max(subscribers, 1)) * 5, 15);
         return Math.Min(starScore + forkScore + watcherScore, 100);
     }
 
@@ -564,7 +564,7 @@ public class GitHubRepositoryService : IRepositoryService
         CloneUrl = r.CloneUrl,
         StargazersCount = r.StargazersCount,
         ForksCount = r.ForksCount,
-        WatchersCount = r.WatchersCount,
+        WatchersCount = r.SubscribersCount,
         OpenIssuesCount = r.OpenIssuesCount,
         SubscribersCount = r.SubscribersCount,
         NetworkCount = 0,

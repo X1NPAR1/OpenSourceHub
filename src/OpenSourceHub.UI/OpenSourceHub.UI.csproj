@@ -9,9 +9,9 @@
     <Deterministic>false</Deterministic>
     <AssemblyName>OpenSourceHub</AssemblyName>
     <RootNamespace>OpenSourceHub.UI</RootNamespace>
-    <AssemblyVersion>1.2.7.0</AssemblyVersion>
-    <FileVersion>1.2.7.0</FileVersion>
-    <Version>1.2.7</Version>
+    <AssemblyVersion>1.2.8.0</AssemblyVersion>
+    <FileVersion>1.2.8.0</FileVersion>
+    <Version>1.2.8</Version>
     <Product>OpenSourceHub</Product>
     <Company>XinPari Software</Company>
     <Copyright>© 2026 XinPari Software</Copyright>
@@ -20,6 +20,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <Optimize>true</Optimize>
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <!-- NU1701: LiveCharts' transitive OpenTK/SkiaSharp packages target .NET Framework; they work on net10.0-windows. -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -187,8 +187,12 @@ public class GitHubAuthService : IGitHubAuthService
         try
         {
             var data = Encoding.UTF8.GetBytes(token);
-            var encrypted = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
-            return Convert.ToBase64String(encrypted);
+            if (OperatingSystem.IsWindows())
+            {
+                var encrypted = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
+                return Convert.ToBase64String(encrypted);
+            }
+            return Convert.ToBase64String(data);
         }
         catch
         {
@@ -201,8 +205,12 @@ public class GitHubAuthService : IGitHubAuthService
         try
         {
             var data = Convert.FromBase64String(encrypted);
-            var decrypted = ProtectedData.Unprotect(data, null, DataProtectionScope.CurrentUser);
-            return Encoding.UTF8.GetString(decrypted);
+            if (OperatingSystem.IsWindows())
+            {
+                var decrypted = ProtectedData.Unprotect(data, null, DataProtectionScope.CurrentUser);
+                return Encoding.UTF8.GetString(decrypted);
+            }
+            return Encoding.UTF8.GetString(data);
         }
         catch
         {

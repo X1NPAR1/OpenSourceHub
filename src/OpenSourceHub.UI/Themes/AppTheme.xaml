@@ -283,7 +283,7 @@
                             <Setter TargetName="bd" Property="Background" Value="{StaticResource ElevatedBrush}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="bd" Property="Background" Value="{StaticResource BgSidebarItem}"/>
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource SidebarItemBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -827,7 +827,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="bd" Property="Background" Value="{StaticResource BgSidebarItem}"/>
+                            <Setter TargetName="bd" Property="Background" Value="{StaticResource SidebarItemBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="{StaticResource BrandPrimaryBrush}"/>

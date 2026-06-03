@@ -2,6 +2,21 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.8] - 2026-06-04
+
+### Fixed (definitive root cause from crash.log)
+- **Recurring `InvalidOperationException: '#FF1A1A2E' is not a valid value for 'Background'`** — finally traced to the true source: two style triggers assigned a **`Color` resource** (`{StaticResource BgSidebarItem}`, a `<Color>`) to the **`Background` property** (which requires a `Brush`). WPF stored the colour string and threw at render time. This fired whenever a sidebar nav item was pressed or a ComboBox dropdown item was hovered — which is why it appeared "randomly" across many screens and survived the previous Logs/DataGrid change. Both triggers now use the matching `SidebarItemBrush`. Swept the entire codebase to confirm no other `Color`-as-`Brush` misuse remains.
+
+### Quality
+- **0 warnings, 0 errors** across the whole solution:
+  - `CS8603` (InverseBoolConverter possible-null return) — returns a definite `bool`.
+  - `CS0618` (Octokit `Repository.WatchersCount` deprecated) — mapped to `SubscribersCount` (the real watcher count); popularity score updated accordingly.
+  - `CS0618` (`DateRange.GreaterThan(DateTime)` deprecated) — switched to the `DateTimeOffset` overload.
+  - `CA1416` (DPAPI `ProtectedData` is Windows-only) — guarded with `OperatingSystem.IsWindows()` and a cross-platform base64 fallback.
+  - `NU1701` (LiveCharts' transitive OpenTK/SkiaSharp target .NET Framework) — documented and suppressed in the UI project.
+
+---
+
 ## [1.2.7] - 2026-06-03
 
 ### Fixed (diagnosed from crash.log — exact root causes)
