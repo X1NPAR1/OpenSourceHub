@@ -100,7 +100,7 @@
                                 <TextBlock FontSize="13" VerticalAlignment="Center">
                                     <Run Text="&#xE735;" FontFamily="{StaticResource IconFont}" Foreground="#FCD34D"/>
                                     <Run Text=" "/>
-                                    <Run Text="{Binding Repository.StargazersCount, Converter={StaticResource NumberToKiloConverter}}" Foreground="{StaticResource SubTextBrush}"/>
+                                    <Run Text="{Binding Repository.StargazersCount, Converter={StaticResource NumberToKiloConverter}, Mode=OneWay}" Foreground="{StaticResource SubTextBrush}"/>
                                 </TextBlock>
                             </StackPanel>
                         </Grid>

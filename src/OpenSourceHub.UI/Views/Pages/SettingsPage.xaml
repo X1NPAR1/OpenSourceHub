@@ -107,13 +107,15 @@
                                 <TextBlock Text="UI language — takes effect immediately" FontSize="11"
                                            Foreground="{StaticResource MutedTextBrush}"/>
                             </StackPanel>
-                            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedLanguage}"
-                                      SelectedValuePath="Tag" Height="36">
-                                <ComboBoxItem Content="English" Tag="{x:Static domain:AppLanguage.English}"/>
-                                <ComboBoxItem Content="Türkçe" Tag="{x:Static domain:AppLanguage.Turkish}"/>
-                                <ComboBoxItem Content="Русский" Tag="{x:Static domain:AppLanguage.Russian}"/>
-                                <ComboBoxItem Content="Deutsch" Tag="{x:Static domain:AppLanguage.German}"/>
-                                <ComboBoxItem Content="Nederlands" Tag="{x:Static domain:AppLanguage.Dutch}"/>
+                            <ComboBox Grid.Column="1"
+                                      SelectedItem="{Binding SelectedLanguage}"
+                                      ItemsSource="{Binding AvailableLanguages, Mode=OneWay}"
+                                      Height="36">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource EnumToLanguageNameConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
                             </ComboBox>
                         </Grid>
 
@@ -424,7 +426,7 @@
                                 <TextBlock Text="OpenSourceHub" FontSize="16" FontWeight="Bold"
                                            Foreground="{StaticResource TextBrush}"/>
                                 <TextBlock FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,2,0,0">
-                                    <Run Text="{Binding AppVersion, StringFormat='Version {0}'}"/>
+                                    <Run Text="{Binding AppVersion, StringFormat='Version {0}', Mode=OneWay}"/>
                                     <Run Text=" · "/>
                                     <Run Text="XinPari Software"/>
                                     <Run Text=" · "/>

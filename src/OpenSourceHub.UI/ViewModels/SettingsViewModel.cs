@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using OpenSourceHub.Domain.Entities;
 using OpenSourceHub.Domain.Enums;
@@ -34,7 +35,10 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty] private bool _minimizeToTray;
 
     public string AppVersion { get; } =
-        Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.2.4";
+        Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.2.5";
+
+    public IReadOnlyList<AppLanguage> AvailableLanguages { get; } =
+        Enum.GetValues<AppLanguage>().ToArray();
 
     public SettingsViewModel(ISettingsService settings, ILogService logService, IMemoryCache cache)
     {

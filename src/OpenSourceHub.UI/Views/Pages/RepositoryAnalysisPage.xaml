@@ -169,7 +169,7 @@
                                         <TextBlock FontSize="11" Foreground="{StaticResource SubTextBrush}">
                                             <Run Text="&#xE923;" FontFamily="{StaticResource IconFont}"/>
                                             <Run Text=" "/>
-                                            <Run Text="{Binding Repository.UpdatedAt, Converter={StaticResource DateToRelativeConverter}}"/>
+                                            <Run Text="{Binding Repository.UpdatedAt, Converter={StaticResource DateToRelativeConverter}, Mode=OneWay}"/>
                                         </TextBlock>
                                     </Border>
                                 </StackPanel>
@@ -641,7 +641,7 @@
                                                     <TextBlock Text="{Binding Login}" FontSize="12"
                                                                FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
                                                     <TextBlock FontSize="10" Foreground="{StaticResource MutedTextBrush}">
-                                                        <Run Text="{Binding Contributions}"/>
+                                                        <Run Text="{Binding Contributions, Mode=OneWay}"/>
                                                         <Run Text=" commits"/>
                                                     </TextBlock>
                                                 </StackPanel>

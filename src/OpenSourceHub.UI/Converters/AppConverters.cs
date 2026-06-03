@@ -181,3 +181,21 @@ public class ListCountToVisibilityConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
 }
+
+public class EnumToLanguageNameConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value switch
+        {
+            AppLanguage.English => "English",
+            AppLanguage.Turkish => "Türkçe",
+            AppLanguage.Russian => "Русский",
+            AppLanguage.German  => "Deutsch",
+            AppLanguage.Dutch   => "Nederlands",
+            _ => value?.ToString() ?? ""
+        };
+    }
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}

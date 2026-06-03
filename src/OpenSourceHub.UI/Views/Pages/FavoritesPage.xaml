@@ -17,7 +17,7 @@
                 <TextBlock Text="{loc:Localization Favorites.Title}"
                            FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
                 <TextBlock FontSize="13" Foreground="{StaticResource MutedTextBrush}">
-                    <Run Text="{Binding Items.Count}"/>
+                    <Run Text="{Binding Items.Count, Mode=OneWay}"/>
                     <Run Text=" saved repositories"/>
                 </TextBlock>
             </StackPanel>
@@ -84,7 +84,7 @@
                                             <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}"
                                                        VerticalAlignment="Center">
                                                 <Run Text="Added "/>
-                                                <Run Text="{Binding AddedAt, StringFormat='MMM dd, yyyy'}"/>
+                                                <Run Text="{Binding AddedAt, StringFormat='MMM dd, yyyy', Mode=OneWay}"/>
                                             </TextBlock>
                                         </StackPanel>
 

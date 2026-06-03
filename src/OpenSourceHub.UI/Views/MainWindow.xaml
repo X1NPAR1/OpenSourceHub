@@ -130,7 +130,7 @@
                                    Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
                         <Border Background="{StaticResource BrandPrimaryBrush}" CornerRadius="3"
                                 Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center" Opacity="0.8">
-                            <TextBlock Text="v1.2.4" FontSize="9" FontWeight="SemiBold"
+                            <TextBlock Text="v1.2.5" FontSize="9" FontWeight="SemiBold"
                                        Foreground="White" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>

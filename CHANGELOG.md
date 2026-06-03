@@ -2,6 +2,20 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.5] - 2026-06-03
+
+### Fixed
+- **XamlParseException "FrameworkElement.Style" (all remaining)**: Added `x:Shared="False"` to all four shadow resources (`ShadowSM`, `ShadowMD`, `ShadowLG`, `ShadowBrand`) in AppTheme.xaml. WPF was trying to set the same `DropShadowEffect` instance on multiple elements via style triggers, which throws `InvalidOperationException` (an element can only belong to one visual tree). `x:Shared="False"` forces a new instance per use.
+- **InvalidOperationException: ObservableCollection.Count TwoWay binding**: In .NET, `Run.Text` has `BindsTwoWayByDefault=true`. Added `Mode=OneWay` to all `<Run Text="{Binding ...}"/>` bindings across all pages (FavoritesPage, LogsPage, OrganizationPage, RepositoryAnalysisPage, AiPage, SettingsPage).
+- **InvalidOperationException: AppVersion TwoWay binding**: `SettingsViewModel.AppVersion` is read-only. Fixed by adding `Mode=OneWay` to the binding via the Run.Text fix above.
+- **Language ComboBox not selectable by click**: Replaced `SelectedValuePath="Tag"` + inline `{x:Static}` items with `ItemsSource="{Binding AvailableLanguages}"` + `SelectedItem="{Binding SelectedLanguage}"` + `EnumToLanguageNameConverter`. The `SelectedValuePath` approach with x:Static enum tags has a known WPF click-selection bug.
+
+### Added
+- `EnumToLanguageNameConverter` for displaying language enum values as human-readable names in ComboBox.
+- `AvailableLanguages` property on `SettingsViewModel` exposing all supported languages.
+
+---
+
 ## [1.2.4] - 2026-06-03
 
 ### Fixed

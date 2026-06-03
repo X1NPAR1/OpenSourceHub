@@ -29,6 +29,7 @@
             <conv:AuthButtonTextConverter x:Key="AuthButtonTextConverter"/>
             <conv:EnumToBoolConverter x:Key="EnumToBoolConverter"/>
             <conv:ScoreToLevelConverter x:Key="ScoreToLevelConverter"/>
+            <conv:EnumToLanguageNameConverter x:Key="EnumToLanguageNameConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

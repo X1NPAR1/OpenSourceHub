@@ -127,7 +127,7 @@
                                             <TextBlock Text="&#xE74C;" FontFamily="{StaticResource IconFont}"
                                                        FontSize="12" Foreground="{StaticResource BrandPrimaryBrush}" Margin="0,0,6,0"/>
                                             <TextBlock FontSize="13">
-                                                <Run Text="{Binding Organization.PublicRepos}" FontWeight="SemiBold"
+                                                <Run Text="{Binding Organization.PublicRepos, Mode=OneWay}" FontWeight="SemiBold"
                                                      Foreground="{StaticResource TextBrush}"/>
                                                 <Run Text=" repos" Foreground="{StaticResource MutedTextBrush}"/>
                                             </TextBlock>
@@ -138,7 +138,7 @@
                                             <TextBlock Text="&#xF25A;" FontFamily="{StaticResource IconFont}"
                                                        FontSize="12" Foreground="{StaticResource BrandPrimaryBrush}" Margin="0,0,6,0"/>
                                             <TextBlock FontSize="13">
-                                                <Run Text="{Binding Members.Count}" FontWeight="SemiBold"
+                                                <Run Text="{Binding Members.Count, Mode=OneWay}" FontWeight="SemiBold"
                                                      Foreground="{StaticResource TextBrush}"/>
                                                 <Run Text=" members" Foreground="{StaticResource MutedTextBrush}"/>
                                             </TextBlock>
@@ -177,7 +177,7 @@
                                                     <TextBlock Text="{Binding Login}" FontSize="13"
                                                                FontWeight="SemiBold" Foreground="{StaticResource TextBrush}"/>
                                                     <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}">
-                                                        <Run Text="{Binding Contributions}" FontWeight="SemiBold"/>
+                                                        <Run Text="{Binding Contributions, Mode=OneWay}" FontWeight="SemiBold"/>
                                                         <Run Text=" contributions"/>
                                                     </TextBlock>
                                                 </StackPanel>

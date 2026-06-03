@@ -99,11 +99,11 @@
     <CornerRadius x:Key="RadiusXL">20</CornerRadius>
     <CornerRadius x:Key="RadiusFull">100</CornerRadius>
 
-    <!-- Drop shadows -->
-    <DropShadowEffect x:Key="ShadowSM" BlurRadius="8" ShadowDepth="2" Opacity="0.35" Color="#000000" Direction="270"/>
-    <DropShadowEffect x:Key="ShadowMD" BlurRadius="16" ShadowDepth="4" Opacity="0.4" Color="#000000" Direction="270"/>
-    <DropShadowEffect x:Key="ShadowLG" BlurRadius="28" ShadowDepth="8" Opacity="0.45" Color="#000000" Direction="270"/>
-    <DropShadowEffect x:Key="ShadowBrand" BlurRadius="20" ShadowDepth="0" Opacity="0.5" Color="#0078D4" Direction="270"/>
+    <!-- Drop shadows — x:Shared="False" creates a new instance per use, preventing WPF shared-Freezable InvalidOperationException -->
+    <DropShadowEffect x:Key="ShadowSM" x:Shared="False" BlurRadius="8" ShadowDepth="2" Opacity="0.35" Color="#000000" Direction="270"/>
+    <DropShadowEffect x:Key="ShadowMD" x:Shared="False" BlurRadius="16" ShadowDepth="4" Opacity="0.4" Color="#000000" Direction="270"/>
+    <DropShadowEffect x:Key="ShadowLG" x:Shared="False" BlurRadius="28" ShadowDepth="8" Opacity="0.45" Color="#000000" Direction="270"/>
+    <DropShadowEffect x:Key="ShadowBrand" x:Shared="False" BlurRadius="20" ShadowDepth="0" Opacity="0.5" Color="#0078D4" Direction="270"/>
 
     <!-- ═══════════════════════════════════════════════
          CARD STYLES
