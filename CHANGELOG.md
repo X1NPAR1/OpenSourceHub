@@ -2,6 +2,17 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.3] - 2026-06-03
+
+### Fixed
+- **XamlParseException on startup**: `Icon="/Assets/AppIcon.ico"` caused `TypeConverterMarkupExtension` failure because WPF's BAML ICO decoder rejects PNG-compressed ICO (Vista+ format). Fixed by:
+  - Regenerating `AppIcon.ico` with proper DIB/BMP format (6 sizes: 256/128/64/48/32/16px, 370KB).
+  - Switching `Window.Icon` in `MainWindow.xaml` from `.ico` to `/Assets/AppIcon.png` — WPF loads PNG icons natively without issues.
+  - `ApplicationIcon` in `.csproj` still points to `AppIcon.ico` so the exe file icon in Windows Explorer works correctly.
+- Removed conflicting `<None Update>` item from `.csproj` that could shadow the `<Resource Include="Assets\**">` entry.
+
+---
+
 ## [1.2.2] - 2026-06-03
 
 ### Fixed

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/sürüm-1.2.2-0078D4?style=flat-square" alt="Sürüm"/>
+<img src="https://img.shields.io/badge/sürüm-1.2.3-0078D4?style=flat-square" alt="Sürüm"/>
 <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square" alt=".NET"/>
 <img src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square" alt="Platform"/>
 <img src="https://img.shields.io/badge/lisans-MIT-10B981?style=flat-square" alt="Lisans"/>
@@ -11,7 +11,7 @@
 
 Analiz Et. Keşfet. Daha İyi İnşa Et.
 
-[v1.2.2 İndir](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Hata Bildir](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Özellik İste](https://github.com/X1NPAR1/OpenSourceHub/issues)
+[v1.2.3 İndir](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Hata Bildir](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Özellik İste](https://github.com/X1NPAR1/OpenSourceHub/issues)
 
 </div>
 
@@ -155,5 +155,5 @@ Katkılar memnuniyetle karşılanır. Pull request göndermeden önce önerilen 
 ---
 
 <div align="center">
-❤️ ile geliştirildi — <a href="https://github.com/X1NPAR1">X1NPAR1</a> · XinPari Software · Sürüm 1.2.2
+❤️ ile geliştirildi — <a href="https://github.com/X1NPAR1">X1NPAR1</a> · XinPari Software · Sürüm 1.2.3
 </div>

@@ -4,7 +4,7 @@
         xmlns:controls="clr-namespace:OpenSourceHub.UI.Controls"
         xmlns:services="clr-namespace:OpenSourceHub.UI.Services"
         Title="OpenSourceHub — Analyze. Discover. Build Better."
-        Icon="/Assets/AppIcon.ico"
+        Icon="/Assets/AppIcon.png"
         Width="1380" Height="840"
         MinWidth="1100" MinHeight="700"
         WindowStartupLocation="CenterScreen"
@@ -130,7 +130,7 @@
                                    Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
                         <Border Background="{StaticResource BrandPrimaryBrush}" CornerRadius="3"
                                 Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center" Opacity="0.8">
-                            <TextBlock Text="v1.2.2" FontSize="9" FontWeight="SemiBold"
+                            <TextBlock Text="v1.2.3" FontSize="9" FontWeight="SemiBold"
                                        Foreground="White" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
