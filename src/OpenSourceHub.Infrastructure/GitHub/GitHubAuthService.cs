@@ -40,7 +40,7 @@ public class GitHubAuthService : IGitHubAuthService
 
         try
         {
-            var tempClient = new GitHubClient(new ProductHeaderValue("OpenSourceHub", "1.1.5"))
+            var tempClient = new GitHubClient(new ProductHeaderValue("OpenSourceHub", "1.2.1"))
             {
                 Credentials = new Credentials(token.Trim())
             };

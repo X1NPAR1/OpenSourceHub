@@ -10,6 +10,7 @@ using OpenSourceHub.UI.ViewModels;
 using OpenSourceHub.UI.Views;
 using OpenSourceHub.UI.Views.Pages;
 using System.Windows;
+using MainWindow = OpenSourceHub.UI.Views.MainWindow;
 
 namespace OpenSourceHub.UI;
 
