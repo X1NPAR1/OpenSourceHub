@@ -1,4 +1,5 @@
 using OpenSourceHub.UI.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace OpenSourceHub.UI.Views.Pages;
@@ -12,11 +13,13 @@ public partial class TrendingPage : Page
         InitializeComponent();
         _vm = vm;
         DataContext = vm;
+        Loaded += OnPageLoaded;
     }
 
-    protected override async void OnInitialized(EventArgs e)
+    private async void OnPageLoaded(object sender, RoutedEventArgs e)
     {
-        base.OnInitialized(e);
-        await _vm.LoadAsync();
+        Loaded -= OnPageLoaded;
+        try { await _vm.LoadAsync(); }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[TrendingPage] Load error: {ex}"); }
     }
 }

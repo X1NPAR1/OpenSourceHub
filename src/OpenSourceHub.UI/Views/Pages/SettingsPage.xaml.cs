@@ -1,4 +1,5 @@
 using OpenSourceHub.UI.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace OpenSourceHub.UI.Views.Pages;
@@ -13,12 +14,17 @@ public partial class SettingsPage : Page
         _vm = vm;
         DataContext = vm;
         ApiKeyBox.PasswordChanged += (_, _) => _vm.OpenAiApiKey = ApiKeyBox.Password;
+        Loaded += OnPageLoaded;
     }
 
-    protected override async void OnInitialized(EventArgs e)
+    private async void OnPageLoaded(object sender, RoutedEventArgs e)
     {
-        base.OnInitialized(e);
-        await _vm.LoadAsync();
-        ApiKeyBox.Password = _vm.OpenAiApiKey;
+        Loaded -= OnPageLoaded;
+        try
+        {
+            await _vm.LoadAsync();
+            ApiKeyBox.Password = _vm.OpenAiApiKey;
+        }
+        catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[SettingsPage] Load error: {ex}"); }
     }
 }

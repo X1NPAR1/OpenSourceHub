@@ -2,6 +2,24 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.2] - 2026-06-03
+
+### Fixed
+- **Token entry crash**: Removed duplicate `SignedIn` event handler in `SignInPage` that called `NavigationService.GoBack()` after login, causing the Frame to navigate back to SignIn while `DashboardPage.OnInitialized` was still running — resulting in a silent app crash.
+- **Thread safety**: Added `Dispatcher.Invoke` guard in `MainViewModel.OnAuthStateChanged` so GitHub auth state updates from background threads are always marshaled to the UI thread.
+- **Silent crashes**: Added `DispatcherUnhandledException` and `AppDomain.UnhandledException` handlers in `App.xaml.cs` — unhandled exceptions now show an error dialog instead of silently terminating the process.
+- **Page load crashes**: Replaced `async void OnInitialized` with `Page.Loaded` event in all 5 auto-loading pages — exceptions from async page loads are now properly caught and logged instead of crashing the dispatcher.
+
+### Performance
+- Removed `DropShadowEffect` from all card styles (`CardStyle`, `CardElevatedStyle`, `GlassCardStyle`) and Dashboard stat cards — these GPU effects were recalculated on every render frame and were the primary source of lag.
+- Removed `ShadowLG` from the main window outer border.
+- Simplified page transition animation from `FadeIn + SlideInFromBottom` (two simultaneous animations) to a single `FadeIn(180ms)`.
+
+### Added
+- **Application icon**: Multi-resolution `AppIcon.ico` (256/64/48/32/16px) embedded in exe and shown in taskbar/title bar — resolves missing icon in Explorer and taskbar.
+
+---
+
 ## [1.2.1] - 2026-06-03
 
 ### Fixed

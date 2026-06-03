@@ -5,6 +5,7 @@ using OpenSourceHub.Domain.Enums;
 using OpenSourceHub.Domain.Interfaces;
 using OpenSourceHub.Localization;
 using OpenSourceHub.UI.Services;
+using System.Windows;
 
 namespace OpenSourceHub.UI.ViewModels;
 
@@ -52,6 +53,11 @@ public partial class MainViewModel : BaseViewModel
 
     private void OnAuthStateChanged(object? sender, UserProfile? user)
     {
+        if (!Application.Current.Dispatcher.CheckAccess())
+        {
+            Application.Current.Dispatcher.Invoke(() => OnAuthStateChanged(sender, user));
+            return;
+        }
         CurrentUser = user;
         IsAuthenticated = user != null;
     }

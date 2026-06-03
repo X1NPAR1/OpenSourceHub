@@ -21,6 +21,27 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        DispatcherUnhandledException += (_, args) =>
+        {
+            args.Handled = true;
+            MessageBox.Show(
+                $"Beklenmedik bir hata oluştu:\n\n{args.Exception.GetType().Name}: {args.Exception.Message}",
+                "Uygulama Hatası",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        };
+
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            MessageBox.Show(
+                $"Kritik hata:\n\n{ex?.GetType().Name}: {ex?.Message}",
+                "Kritik Uygulama Hatası",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        };
+
         try
         {
             _host = Host.CreateDefaultBuilder()

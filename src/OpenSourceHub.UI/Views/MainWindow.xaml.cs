@@ -96,11 +96,8 @@ public partial class MainWindow : System.Windows.Window, OpenSourceHub.UI.IAppBo
 
     private void NavigateWithTransition(Page page)
     {
-        PageContainer.Opacity = 0;
         MainFrame.Navigate(page);
-
-        AnimationHelper.FadeIn(PageContainer, 200);
-        AnimationHelper.SlideInFromBottom(PageContainer, 15, 220);
+        AnimationHelper.FadeIn(PageContainer, 180);
     }
 
     private static string GetPageTitle(string tag) => tag switch

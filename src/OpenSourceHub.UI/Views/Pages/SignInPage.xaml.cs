@@ -15,12 +15,6 @@ public partial class SignInPage : Page
         _vm = vm;
         DataContext = vm;
 
-        vm.SignedIn += (_, _) =>
-        {
-            if (NavigationService?.CanGoBack == true)
-                NavigationService.GoBack();
-        };
-
         vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SignInViewModel.IsTokenVisible))

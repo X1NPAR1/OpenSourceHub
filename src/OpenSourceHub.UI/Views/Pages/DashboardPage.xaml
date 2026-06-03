@@ -22,11 +22,7 @@
             <Grid>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding WelcomeMessage}" FontSize="24" FontWeight="Bold"
-                               Foreground="{StaticResource TextBrush}" Margin="0,0,0,3">
-                        <TextBlock.Effect>
-                            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#0078D4" Opacity="0.2"/>
-                        </TextBlock.Effect>
-                    </TextBlock>
+                               Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
                     <TextBlock Text="Your GitHub intelligence overview" FontSize="13"
                                Foreground="{StaticResource MutedTextBrush}"/>
                 </StackPanel>
@@ -67,9 +63,6 @@
                                 <GradientStop Color="#0D0D1E" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <Border.Effect>
-                            <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.3" Color="#000000" Direction="270"/>
-                        </Border.Effect>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -156,9 +149,6 @@
                                     <GradientStop Color="#0A1020" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="#000000" Direction="270"/>
-                            </Border.Effect>
                             <StackPanel>
                                 <Grid Margin="0,0,0,12">
                                     <Border Width="36" Height="36" CornerRadius="10" HorizontalAlignment="Left">
@@ -197,9 +187,6 @@
                                     <GradientStop Color="#140B05" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="#000000" Direction="270"/>
-                            </Border.Effect>
                             <StackPanel>
                                 <Grid Margin="0,0,0,12">
                                     <Border Width="36" Height="36" CornerRadius="10" HorizontalAlignment="Left">
@@ -238,9 +225,6 @@
                                     <GradientStop Color="#040E0A" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="#000000" Direction="270"/>
-                            </Border.Effect>
                             <StackPanel>
                                 <Grid Margin="0,0,0,12">
                                     <Border Width="36" Height="36" CornerRadius="10" HorizontalAlignment="Left">
@@ -279,9 +263,6 @@
                                     <GradientStop Color="#0F0505" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.25" Color="#000000" Direction="270"/>
-                            </Border.Effect>
                             <StackPanel>
                                 <Grid Margin="0,0,0,12">
                                     <Border Width="36" Height="36" CornerRadius="10" HorizontalAlignment="Left">

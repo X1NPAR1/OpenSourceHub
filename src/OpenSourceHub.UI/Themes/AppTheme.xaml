@@ -114,7 +114,6 @@
         <Setter Property="Padding" Value="20"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Effect" Value="{StaticResource ShadowSM}"/>
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
         <Setter Property="RenderTransform">
             <Setter.Value><ScaleTransform ScaleX="1" ScaleY="1"/></Setter.Value>
@@ -147,7 +146,6 @@
                     </BeginStoryboard>
                 </Trigger.ExitActions>
                 <Setter Property="BorderBrush" Value="{StaticResource BorderStrongBrush}"/>
-                <Setter Property="Effect" Value="{StaticResource ShadowMD}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -158,7 +156,6 @@
         <Setter Property="Padding" Value="20"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderStrongBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Effect" Value="{StaticResource ShadowMD}"/>
     </Style>
 
     <Style x:Key="GlassCardStyle" TargetType="Border">
@@ -166,7 +163,6 @@
         <Setter Property="Padding" Value="20"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Effect" Value="{StaticResource ShadowMD}"/>
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
         <Setter Property="RenderTransform">
             <Setter.Value><ScaleTransform ScaleX="1" ScaleY="1"/></Setter.Value>

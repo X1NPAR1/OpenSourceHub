@@ -1,4 +1,4 @@
-# OpenSourceHub v1.2.1 Release Notes
+# OpenSourceHub v1.2.2 Release Notes
 
 **Release Date:** 2026-06-03  
 **Publisher:** XinPari Software  
@@ -6,9 +6,39 @@
 
 ---
 
-## What's New in v1.2.1
+## What's New in v1.2.2
 
-### Critical Bug Fix
+### Critical Bug Fixes
+
+**Token Entry Crash — Fixed**
+
+After entering a GitHub token and clicking Sign In, the application closed silently. Root cause:
+- `SignInPage` subscribed to the `SignedIn` event and called `NavigationService.GoBack()`.
+- `MainWindow` had already subscribed to the same event and navigated to Dashboard.
+- The `GoBack()` call navigated the Frame back to SignIn while `DashboardPage.OnInitialized` was still awaiting GitHub API calls — producing an unhandled exception on the dispatcher that silently killed the process.
+
+**Thread Safety — Fixed**
+- `MainViewModel.OnAuthStateChanged` now uses `Dispatcher.Invoke` to ensure GitHub auth callbacks from background threads are safely marshaled to the UI thread.
+
+**Silent Crash Protection — Added**
+- `App.xaml.cs` now registers `DispatcherUnhandledException` and `AppDomain.UnhandledException` handlers. Any future unhandled exception shows a visible error dialog instead of silently terminating the process.
+
+**Page Load Safety — Fixed**
+- Replaced `async void OnInitialized` with `Loaded` event handler in all auto-loading pages. Exceptions from async page initialization are now caught and logged rather than crashing the dispatcher.
+
+### Performance Improvements
+
+- Removed `DropShadowEffect` from all card styles and Dashboard stat cards — these were the primary source of UI lag (GPU shadow recomposition on every frame for every visible card).
+- Removed `ShadowLG` from the main window border.
+- Simplified page transition to a single `FadeIn(180ms)` instead of two simultaneous animations.
+
+### App Icon — Added
+
+Multi-resolution icon (256/64/48/32/16px) is now embedded in the executable and visible in Windows Explorer, taskbar, and the application title bar.
+
+---
+
+## Previous: v1.2.1
 
 **Application Startup Crash — Fixed**
 
