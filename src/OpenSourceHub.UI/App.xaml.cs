@@ -25,8 +25,11 @@ public partial class App : Application
         DispatcherUnhandledException += (_, args) =>
         {
             args.Handled = true;
+            LogCrash("Dispatcher", args.Exception);
             MessageBox.Show(
-                $"Beklenmedik bir hata oluştu:\n\n{args.Exception.GetType().Name}: {args.Exception.Message}",
+                $"Beklenmedik bir hata oluştu:\n\n{args.Exception.GetType().Name}: {args.Exception.Message}\n\n" +
+                $"Detay: {args.Exception.InnerException?.Message}\n\n" +
+                $"Hata günlüğü: %LOCALAPPDATA%\\OpenSourceHub\\crash.log",
                 "Uygulama Hatası",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -35,11 +38,19 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
             var ex = args.ExceptionObject as Exception;
+            LogCrash("AppDomain", ex);
             MessageBox.Show(
-                $"Kritik hata:\n\n{ex?.GetType().Name}: {ex?.Message}",
+                $"Kritik hata:\n\n{ex?.GetType().Name}: {ex?.Message}\n\n" +
+                $"Detay: {ex?.InnerException?.Message}",
                 "Kritik Uygulama Hatası",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
+        };
+
+        System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            LogCrash("UnobservedTask", args.Exception);
+            args.SetObserved();
         };
 
         try
@@ -128,5 +139,34 @@ public partial class App : Application
             _host.Dispose();
         }
         base.OnExit(e);
+    }
+
+    private static void LogCrash(string source, Exception? ex)
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "OpenSourceHub");
+            System.IO.Directory.CreateDirectory(dir);
+            var file = System.IO.Path.Combine(dir, "crash.log");
+
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"════════ {DateTime.Now:yyyy-MM-dd HH:mm:ss} [{source}] ════════");
+            var cur = ex;
+            var depth = 0;
+            while (cur != null)
+            {
+                var indent = new string(' ', depth * 2);
+                sb.AppendLine($"{indent}{cur.GetType().FullName}: {cur.Message}");
+                if (!string.IsNullOrEmpty(cur.StackTrace))
+                    sb.AppendLine($"{indent}{cur.StackTrace}");
+                cur = cur.InnerException;
+                depth++;
+            }
+            sb.AppendLine();
+            System.IO.File.AppendAllText(file, sb.ToString());
+        }
+        catch { /* never let logging crash the crash handler */ }
     }
 }

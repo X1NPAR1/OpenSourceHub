@@ -8,28 +8,79 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- ═══ HEADER ═══ -->
         <Border Grid.Row="0" Style="{StaticResource PageHeaderStyle}">
-            <StackPanel>
-                <TextBlock Text="{loc:Localization Favorites.Title}"
-                           FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
-                <TextBlock FontSize="13" Foreground="{StaticResource MutedTextBrush}">
-                    <Run Text="{Binding Items.Count, Mode=OneWay}"/>
-                    <Run Text=" saved repositories"/>
-                </TextBlock>
-            </StackPanel>
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="{loc:Localization Favorites.Title}"
+                               FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
+                    <TextBlock FontSize="13" Foreground="{StaticResource MutedTextBrush}">
+                        <Run Text="{Binding TotalCount, Mode=OneWay}"/>
+                        <Run Text=" saved repositories"/>
+                    </TextBlock>
+                </StackPanel>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding RefreshCommand}" Padding="14,9">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE72C;" FontFamily="{StaticResource IconFont}" FontSize="13"
+                                   Margin="0,0,7,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Refresh" FontSize="12" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Border>
 
+        <!-- ═══ TOOLBAR: search + sort ═══ -->
+        <Grid Grid.Row="1" Margin="36,18,36,0"
+              Visibility="{Binding TotalCount, Converter={StaticResource ListCountToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Search box -->
+            <Border Grid.Column="0" Background="{StaticResource ElevatedBrush}"
+                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="{StaticResource RadiusSM}" Height="38" Margin="0,0,10,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="&#xE721;" FontFamily="{StaticResource IconFont}"
+                               FontSize="13" Foreground="{StaticResource MutedTextBrush}"
+                               VerticalAlignment="Center" Margin="12,0,8,0"/>
+                    <TextBox Grid.Column="1" Background="Transparent" BorderThickness="0"
+                             Foreground="{StaticResource TextBrush}" VerticalContentAlignment="Center"
+                             FontSize="13" Margin="0,0,12,0"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                </Grid>
+            </Border>
+
+            <!-- Sort dropdown -->
+            <ComboBox Grid.Column="1" Height="38"
+                      ItemsSource="{Binding SortOptions, Mode=OneWay}"
+                      SelectedItem="{Binding SortBy, Mode=TwoWay}"/>
+        </Grid>
+
         <!-- ═══ CONTENT ═══ -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="36,28">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="36,18,36,28">
+
+                <!-- Loading -->
+                <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                            HorizontalAlignment="Center" Margin="0,80">
+                    <controls:LoadingSpinnerControl Width="40" Height="40" HorizontalAlignment="Center"/>
+                </StackPanel>
 
                 <!-- Empty state -->
-                <StackPanel HorizontalAlignment="Center" Margin="0,80"
-                            Visibility="{Binding Items.Count, Converter={StaticResource ZeroToVisibilityConverter}}">
+                <StackPanel HorizontalAlignment="Center" Margin="0,70"
+                            Visibility="{Binding TotalCount, Converter={StaticResource ZeroToVisibilityConverter}}">
                     <TextBlock Text="&#xE734;" FontFamily="{StaticResource IconFont}"
                                FontSize="56" HorizontalAlignment="Center" Margin="0,0,0,16"
                                Foreground="{StaticResource MutedTextBrush}" Opacity="0.4"/>
@@ -41,99 +92,126 @@
                 </StackPanel>
 
                 <!-- Favorites list -->
-                <ItemsControl ItemsSource="{Binding Items}"
-                              Visibility="{Binding Items.Count, Converter={StaticResource ListCountToVisibilityConverter}}">
+                <ItemsControl ItemsSource="{Binding Items}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource CardStyle}" Padding="20,16" Margin="0,0,0,10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0">
-                                        <!-- Title + meta row -->
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <!-- Owner avatar -->
+                                        <controls:AvatarControl Grid.Column="0" Width="40" Height="40"
+                                            DisplayName="{Binding Owner}" Margin="0,0,14,0"
+                                            VerticalAlignment="Top"/>
+
+                                        <StackPanel Grid.Column="1">
                                             <TextBlock Text="{Binding FullName}" FontSize="15" FontWeight="SemiBold"
                                                        Foreground="{StaticResource BrandPrimaryBrush}"
-                                                       TextTrimming="CharacterEllipsis" Cursor="Hand"
-                                                       VerticalAlignment="Center"/>
+                                                       TextTrimming="CharacterEllipsis"/>
+
+                                            <TextBlock Text="{Binding Description}" FontSize="12"
+                                                       Foreground="{StaticResource SubTextBrush}"
+                                                       TextTrimming="CharacterEllipsis" Margin="0,4,0,10"
+                                                       Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}"/>
+
+                                            <!-- Stats row -->
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border Style="{StaticResource ChipStyle}" Padding="8,3" Margin="0,0,6,0"
+                                                        Visibility="{Binding Language, Converter={StaticResource NullToVisibilityConverter}}">
+                                                    <TextBlock Text="{Binding Language}" FontSize="11"
+                                                               Foreground="{StaticResource BrandAccentBrush}"/>
+                                                </Border>
+                                                <Border Background="#1A1400" CornerRadius="6" Padding="8,3" Margin="0,0,8,0">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="&#xE735;" FontFamily="{StaticResource IconFont}"
+                                                                   FontSize="10" Foreground="#FCD34D" Margin="0,0,4,0"/>
+                                                        <TextBlock Text="{Binding Stars, Converter={StaticResource NumberToKiloConverter}}"
+                                                                   FontSize="11" FontWeight="SemiBold" Foreground="#FCD34D"/>
+                                                    </StackPanel>
+                                                </Border>
+                                                <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}"
+                                                           VerticalAlignment="Center">
+                                                    <Run Text="Added "/>
+                                                    <Run Text="{Binding AddedAt, StringFormat='MMM dd, yyyy', Mode=OneWay}"/>
+                                                </TextBlock>
+                                            </StackPanel>
                                         </StackPanel>
 
-                                        <TextBlock Text="{Binding Description}" FontSize="12"
-                                                   Foreground="{StaticResource SubTextBrush}"
-                                                   TextTrimming="CharacterEllipsis" Margin="0,0,0,10"
-                                                   Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}"/>
-
-                                        <!-- Stats row -->
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <Border Style="{StaticResource ChipStyle}" Padding="8,3" Margin="0,0,6,0"
-                                                    Visibility="{Binding Language, Converter={StaticResource NullToVisibilityConverter}}">
-                                                <TextBlock Text="{Binding Language}" FontSize="11"
-                                                           Foreground="{StaticResource BrandAccentBrush}"/>
-                                            </Border>
-                                            <Border Background="#1A1400" CornerRadius="6" Padding="8,3" Margin="0,0,8,0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="&#xE735;" FontFamily="{StaticResource IconFont}"
-                                                               FontSize="10" Foreground="#FCD34D" Margin="0,0,4,0"/>
-                                                    <TextBlock Text="{Binding Stars, Converter={StaticResource NumberToKiloConverter}}"
-                                                               FontSize="11" FontWeight="SemiBold" Foreground="#FCD34D"/>
-                                                </StackPanel>
-                                            </Border>
-                                            <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}"
-                                                       VerticalAlignment="Center">
-                                                <Run Text="Added "/>
-                                                <Run Text="{Binding AddedAt, StringFormat='MMM dd, yyyy', Mode=OneWay}"/>
-                                            </TextBlock>
+                                        <!-- Action buttons -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Open on GitHub"
+                                                    Command="{Binding DataContext.OpenRepositoryCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE71B;" FontFamily="{StaticResource IconFont}" FontSize="14"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Copy clone URL"
+                                                    Command="{Binding DataContext.CopyCloneUrlCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE8C8;" FontFamily="{StaticResource IconFont}" FontSize="14"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Edit note"
+                                                    Command="{Binding DataContext.BeginEditNoteCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE70F;" FontFamily="{StaticResource IconFont}" FontSize="14"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Remove from favorites"
+                                                    Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE74D;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                                           Foreground="{StaticResource ErrorBrush}"/>
+                                            </Button>
                                         </StackPanel>
+                                    </Grid>
 
-                                        <!-- Note -->
-                                        <Border CornerRadius="{StaticResource RadiusSM}" Padding="12,8"
-                                                Background="{StaticResource ElevatedBrush}"
-                                                Visibility="{Binding Note, Converter={StaticResource NullToVisibilityConverter}}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE70B;" FontFamily="{StaticResource IconFont}"
-                                                           FontSize="11" Foreground="{StaticResource BrandAccentBrush}"
-                                                           Margin="0,0,7,0" VerticalAlignment="Top"/>
-                                                <TextBlock Text="{Binding Note}" FontSize="12"
-                                                           Foreground="{StaticResource BrandAccentBrush}"
-                                                           FontStyle="Italic" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <!-- Actions -->
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right">
-                                        <Button Style="{StaticResource GhostButtonStyle}"
-                                                Command="{Binding DataContext.OpenRepositoryCommand,
-                                                    RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding}"
-                                                Margin="0,0,0,6" Padding="10,7">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE71B;" FontFamily="{StaticResource IconFont}"
-                                                           FontSize="13" Margin="0,0,6,0"/>
-                                                <TextBlock Text="Open" FontSize="12"/>
-                                            </StackPanel>
-                                        </Button>
-                                        <Button Style="{StaticResource DangerButtonStyle}"
-                                                Command="{Binding DataContext.RemoveCommand,
-                                                    RelativeSource={RelativeSource AncestorType=Page}}"
-                                                CommandParameter="{Binding}"
-                                                Padding="10,7">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE74D;" FontFamily="{StaticResource IconFont}"
-                                                           FontSize="13" Margin="0,0,6,0"/>
-                                                <TextBlock Text="Remove" FontSize="12"/>
-                                            </StackPanel>
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
+                                    <!-- Note (read-only display) -->
+                                    <Border CornerRadius="{StaticResource RadiusSM}" Padding="12,8" Margin="54,10,0,0"
+                                            Background="{StaticResource ElevatedBrush}"
+                                            Visibility="{Binding Note, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE70B;" FontFamily="{StaticResource IconFont}"
+                                                       FontSize="11" Foreground="{StaticResource BrandAccentBrush}"
+                                                       Margin="0,0,7,0" VerticalAlignment="Top"/>
+                                            <TextBlock Text="{Binding Note}" FontSize="12"
+                                                       Foreground="{StaticResource BrandAccentBrush}"
+                                                       FontStyle="Italic" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
         </ScrollViewer>
+
+        <!-- ═══ NOTE EDITOR OVERLAY ═══ -->
+        <Grid Grid.RowSpan="3" Background="#CC000000"
+              Visibility="{Binding IsEditingNote, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border Background="{StaticResource CardBrush}" BorderBrush="{StaticResource BorderStrongBrush}"
+                    BorderThickness="1" CornerRadius="{StaticResource RadiusLG}"
+                    Width="480" Padding="28,24" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="Edit Note" FontSize="17" FontWeight="Bold"
+                               Foreground="{StaticResource TextBrush}" Margin="0,0,0,4"/>
+                    <TextBlock Text="{Binding SelectedItem.FullName}" FontSize="12"
+                               Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,16"/>
+                    <TextBox Text="{Binding EditNote, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             Style="{StaticResource ModernTextBoxStyle}"
+                             Height="100" TextWrapping="Wrap" AcceptsReturn="True"
+                             VerticalContentAlignment="Top" Margin="0,0,0,18"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource SecondaryButtonStyle}" Content="Cancel"
+                                Command="{Binding CancelNoteCommand}" Margin="0,0,8,0" Padding="18,9"/>
+                        <Button Style="{StaticResource PrimaryButtonStyle}" Content="Save Note"
+                                Command="{Binding SaveNoteCommand}" Padding="18,9"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Page>

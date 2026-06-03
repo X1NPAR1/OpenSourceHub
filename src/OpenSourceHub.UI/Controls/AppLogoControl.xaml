@@ -17,33 +17,6 @@
         <DropShadowEffect x:Key="HubGlow" BlurRadius="10" ShadowDepth="0" Color="#0078D4" Opacity="1"/>
     </UserControl.Resources>
 
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="Loaded">
-            <BeginStoryboard>
-                <Storyboard RepeatBehavior="Forever">
-                    <!-- Orbit ring rotation -->
-                    <DoubleAnimation
-                        Storyboard.TargetName="OrbitCanvas"
-                        Storyboard.TargetProperty="(Canvas.RenderTransform).(RotateTransform.Angle)"
-                        From="0" To="360" Duration="0:0:4"
-                        RepeatBehavior="Forever"/>
-                    <!-- Hub pulse -->
-                    <DoubleAnimation
-                        Storyboard.TargetName="HubEllipse"
-                        Storyboard.TargetProperty="Opacity"
-                        From="0.85" To="1" Duration="0:0:1.8"
-                        AutoReverse="True" RepeatBehavior="Forever"/>
-                    <!-- Outer hex pulse -->
-                    <DoubleAnimation
-                        Storyboard.TargetName="OuterHex"
-                        Storyboard.TargetProperty="Opacity"
-                        From="0.6" To="0.9" Duration="0:0:2.4"
-                        AutoReverse="True" RepeatBehavior="Forever"/>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
-
     <Canvas Width="36" Height="36" ClipToBounds="False">
 
         <!-- Background glow halo -->

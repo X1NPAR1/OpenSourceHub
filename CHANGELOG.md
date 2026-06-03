@@ -2,6 +2,22 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.6] - 2026-06-03
+
+### Fixed
+- **XamlParseException "FrameworkElement.Style" — TRUE ROOT CAUSE**: `CardStyle`, `GlassCardStyle`, `PrimaryButtonStyle`, and `StatCardStyle` each placed a `ScaleTransform` directly in a `Setter.Value` and animated it via hover storyboards. A `Setter.Value` Freezable is shared across every element using the style; on multi-card pages (Analyze, Favorites) WPF could not assign the same `ScaleTransform` to a second element's `RenderTransform`, throwing `InvalidOperationException` surfaced as the Style special-case exception. Removed all shared `ScaleTransform` setters and scale-hover storyboards; replaced with lightweight border/background hover states.
+- **Language ComboBox not selectable by click (only mouse wheel)**: The custom `ComboBox` ControlTemplate was missing the `ToggleButton` that toggles `IsDropDownOpen` on click — so clicking did nothing while the wheel still changed the index natively. Added a transparent overlay `ToggleButton` (ClickMode=Press, two-way bound to `IsDropDownOpen`) covering the whole control. Dropdown now opens on click everywhere. Also made the popup width match the control.
+- **Weird/overlapping perpetual animations** (sidebar top & bottom, Settings About): Removed the forever-spinning orbit ring + pulse storyboards from `AppLogoControl`; the logo is now clean and static.
+
+### Added
+- **Richer Favorites page**: live search box, sort dropdown (Recently Added / Name / Stars), per-card action buttons (Open on GitHub, Copy clone URL, Edit note, Remove), owner avatar, and a modal note editor. Remove now asks for confirmation.
+- **Crash diagnostics**: unhandled exceptions are now written with full inner-exception chains and stack traces to `%LOCALAPPDATA%\OpenSourceHub\crash.log`, plus an `UnobservedTaskException` handler. Error dialogs now show the inner-exception detail and the log path.
+- **App icon**: regenerated as a standard modern multi-resolution ICO (16/24/32/48/64 DIB + 128/256 PNG) so Windows Explorer and the taskbar render it correctly.
+
+> If the old icon still appears in Explorer, it is the Windows icon cache — it refreshes on its own or after `ie4uinit.exe -show`.
+
+---
+
 ## [1.2.5] - 2026-06-03
 
 ### Fixed
