@@ -33,7 +33,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Period buttons -->
+                    <!-- Period buttons (segmented) -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal">
                         <Button Content="{loc:Localization Trending.Today}" Margin="0,0,6,0"
                                 Command="{Binding SelectPeriodCommand}" CommandParameter="Daily" Height="36">
@@ -41,7 +41,9 @@
                                 <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPeriod}" Value="Daily">
-                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                            <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="Foreground" Value="White"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -53,7 +55,9 @@
                                 <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPeriod}" Value="Weekly">
-                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                            <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="Foreground" Value="White"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -65,7 +69,9 @@
                                 <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedPeriod}" Value="Monthly">
-                                            <Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>
+                                            <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}"/>
+                                            <Setter Property="Foreground" Value="White"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -83,7 +89,7 @@
                             Command="{Binding LoadCommand}" Height="36" Padding="14,0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE72C;" FontFamily="{StaticResource IconFont}" FontSize="13" Margin="0,0,7,0"/>
-                            <TextBlock Text="Refresh"/>
+                            <TextBlock Text="{loc:Localization Dashboard.Refresh}"/>
                         </StackPanel>
                     </Button>
                 </Grid>
@@ -98,7 +104,7 @@
                 <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
                             HorizontalAlignment="Center" Margin="0,100">
                     <controls:LoadingSpinnerControl Width="44" Height="44" HorizontalAlignment="Center" Margin="0,0,0,18"/>
-                    <TextBlock Text="Loading trending repositories..." Style="{StaticResource CaptionStyle}"
+                    <TextBlock Text="{loc:Localization Trending.Loading}" Style="{StaticResource CaptionStyle}"
                                HorizontalAlignment="Center" FontSize="14"/>
                 </StackPanel>
 
@@ -145,24 +151,44 @@
                                         </StackPanel>
                                     </StackPanel>
 
-                                    <!-- Stats -->
+                                    <!-- Stats + actions -->
                                     <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
-                                        <Border Background="#1A1400" CornerRadius="6" Padding="12,5" Margin="0,0,0,6">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE735;" FontFamily="{StaticResource IconFont}"
-                                                           FontSize="12" Foreground="#FCD34D" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
-                                                           FontSize="13" FontWeight="Bold" Foreground="#FCD34D"/>
-                                            </StackPanel>
-                                        </Border>
-                                        <Border Background="#0A1600" CornerRadius="6" Padding="12,5">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="&#xE8F2;" FontFamily="{StaticResource IconFont}"
-                                                           FontSize="12" Foreground="#6EE7B7" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding ForksCount, Converter={StaticResource NumberToKiloConverter}}"
-                                                           FontSize="12" Foreground="#6EE7B7"/>
-                                            </StackPanel>
-                                        </Border>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                                            <Border Background="#1A1400" CornerRadius="6" Padding="12,5" Margin="0,0,6,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE735;" FontFamily="{StaticResource IconFont}"
+                                                               FontSize="12" Foreground="#FCD34D" Margin="0,0,5,0"/>
+                                                    <TextBlock Text="{Binding StargazersCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                               FontSize="13" FontWeight="Bold" Foreground="#FCD34D"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Background="#0A1600" CornerRadius="6" Padding="12,5">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="&#xE8F2;" FontFamily="{StaticResource IconFont}"
+                                                               FontSize="12" Foreground="#6EE7B7" Margin="0,0,5,0"/>
+                                                    <TextBlock Text="{Binding ForksCount, Converter={StaticResource NumberToKiloConverter}}"
+                                                               FontSize="12" Foreground="#6EE7B7"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Add to favorites"
+                                                    Command="{Binding DataContext.AddToFavoritesCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE734;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                                           Foreground="#FCD34D"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Copy clone URL"
+                                                    Command="{Binding DataContext.CopyCloneUrlCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE8C8;" FontFamily="{StaticResource IconFont}" FontSize="14"/>
+                                            </Button>
+                                            <Button Style="{StaticResource IconButtonStyle}" ToolTip="Open on GitHub"
+                                                    Command="{Binding DataContext.OpenRepositoryCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="&#xE71B;" FontFamily="{StaticResource IconFont}" FontSize="14"/>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
                             </Border>

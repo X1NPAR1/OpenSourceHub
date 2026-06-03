@@ -8,6 +8,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -17,7 +19,7 @@
                 <StackPanel>
                     <TextBlock Text="{loc:Localization Logs.Title}"
                                FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
-                    <TextBlock Text="Application event log — debug, info, warnings and errors"
+                    <TextBlock Text="{loc:Localization Logs.Subtitle}"
                                FontSize="13" Foreground="{StaticResource MutedTextBrush}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -41,157 +43,229 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <!-- ═══ FILTER BAR ═══ -->
+        <Border Grid.Row="1" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="36,12">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{loc:Localization Logs.Filter}" FontSize="10" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,14,0"/>
 
-            <!-- Filter bar -->
-            <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="36,12">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="FILTER:" FontSize="10" FontWeight="SemiBold"
-                               Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                <Button Margin="0,0,6,0" Command="{Binding FilterCommand}" CommandParameter="All" Height="32" Padding="14,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedLevel}" Value="All">
+                                    <Setter Property="Background" Value="{StaticResource BrandPrimaryBrush}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <TextBlock Text="{loc:Localization Logs.All}" FontSize="12"/>
+                </Button>
 
-                    <!-- Stat badges + filter buttons -->
-                    <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,6,0"
-                            Command="{Binding FilterCommand}" CommandParameter="All" Height="32" Padding="14,0">
-                        <TextBlock Text="All" FontSize="12"/>
-                    </Button>
-
-                    <Button Margin="0,0,6,0" Command="{Binding FilterCommand}" CommandParameter="Info"
-                            Height="32" Padding="14,0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedLevel}" Value="Info">
-                                        <Setter Property="Foreground" Value="#60A5FA"/>
-                                        <Setter Property="BorderBrush" Value="#1E40AF"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="7" Height="7" Fill="#3B82F6" Margin="0,0,7,0"/>
-                            <TextBlock Text="Info" FontSize="12"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Margin="0,0,6,0" Command="{Binding FilterCommand}" CommandParameter="Warning"
-                            Height="32" Padding="14,0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedLevel}" Value="Warning">
-                                        <Setter Property="Foreground" Value="#FCD34D"/>
-                                        <Setter Property="BorderBrush" Value="#78350F"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="7" Height="7" Fill="#F59E0B" Margin="0,0,7,0"/>
-                            <TextBlock Text="Warning" FontSize="12"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Command="{Binding FilterCommand}" CommandParameter="Error"
-                            Height="32" Padding="14,0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedLevel}" Value="Error">
-                                        <Setter Property="Foreground" Value="#FCA5A5"/>
-                                        <Setter Property="BorderBrush" Value="#7F1D1D"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="7" Height="7" Fill="#EF4444" Margin="0,0,7,0"/>
-                            <TextBlock Text="Error" FontSize="12"/>
-                        </StackPanel>
-                    </Button>
-
-                    <!-- Stats -->
-                    <StackPanel Orientation="Horizontal" Margin="24,0,0,0" VerticalAlignment="Center">
-                        <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}">
-                            <Run Text="{Binding TotalCount, Mode=OneWay}" Foreground="{StaticResource SubTextBrush}" FontWeight="SemiBold"/>
-                            <Run Text=" entries"/>
-                        </TextBlock>
-                        <Border Background="#0A0F1A" CornerRadius="4" Padding="8,3" Margin="12,0,0,0">
-                            <TextBlock FontSize="10">
-                                <Run Text="&#xE783;" FontFamily="{StaticResource IconFont}" Foreground="#FCA5A5"/>
-                                <Run Text=" "/>
-                                <Run Text="{Binding ErrorCount, Mode=OneWay}" Foreground="#FCA5A5" FontWeight="SemiBold"/>
-                                <Run Text=" errors" Foreground="{StaticResource MutedTextBrush}"/>
-                            </TextBlock>
-                        </Border>
-                        <Border Background="#0A0F00" CornerRadius="4" Padding="8,3" Margin="6,0,0,0">
-                            <TextBlock FontSize="10">
-                                <Run Text="&#xE7BA;" FontFamily="{StaticResource IconFont}" Foreground="#FCD34D"/>
-                                <Run Text=" "/>
-                                <Run Text="{Binding WarningCount, Mode=OneWay}" Foreground="#FCD34D" FontWeight="SemiBold"/>
-                                <Run Text=" warnings" Foreground="{StaticResource MutedTextBrush}"/>
-                            </TextBlock>
-                        </Border>
+                <Button Margin="0,0,6,0" Command="{Binding FilterCommand}" CommandParameter="Information"
+                        Height="32" Padding="14,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedLevel}" Value="Information">
+                                    <Setter Property="Foreground" Value="#60A5FA"/>
+                                    <Setter Property="BorderBrush" Value="#1E40AF"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7" Fill="#3B82F6" Margin="0,0,7,0"/>
+                        <TextBlock Text="{loc:Localization Logs.Info}" FontSize="12"/>
                     </StackPanel>
-                </StackPanel>
-            </Border>
+                </Button>
 
-            <!-- Logs DataGrid -->
-            <DataGrid Grid.Row="1" ItemsSource="{Binding Logs}" Margin="0" RowHeight="42">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat='yyyy-MM-dd HH:mm:ss'}"
-                                        Width="160" FontFamily="{StaticResource MonoFont}"/>
-                    <DataGridTemplateColumn Header="Level" Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="4" Padding="7,3" HorizontalAlignment="Left" Margin="6,0">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Setter Property="Background" Value="#1A1A2E"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Level}" Value="Error">
-                                                    <Setter Property="Background" Value="#2D0808"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Level}" Value="Warning">
-                                                    <Setter Property="Background" Value="#1A1000"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Level}" Value="Information">
-                                                    <Setter Property="Background" Value="#0A0F1A"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <TextBlock Text="{Binding Level}" FontSize="10" FontWeight="SemiBold">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="{StaticResource SubTextBrush}"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Level}" Value="Error">
-                                                        <Setter Property="Foreground" Value="#FCA5A5"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Level}" Value="Warning">
-                                                        <Setter Property="Foreground" Value="#FCD34D"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Level}" Value="Information">
-                                                        <Setter Property="Foreground" Value="#93C5FD"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="160"/>
-                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
-                    <DataGridTextColumn Header="Exception" Binding="{Binding Exception}" Width="200"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+                <Button Margin="0,0,6,0" Command="{Binding FilterCommand}" CommandParameter="Warning"
+                        Height="32" Padding="14,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedLevel}" Value="Warning">
+                                    <Setter Property="Foreground" Value="#FCD34D"/>
+                                    <Setter Property="BorderBrush" Value="#78350F"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7" Fill="#F59E0B" Margin="0,0,7,0"/>
+                        <TextBlock Text="{loc:Localization Logs.Warning}" FontSize="12"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{Binding FilterCommand}" CommandParameter="Error"
+                        Height="32" Padding="14,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedLevel}" Value="Error">
+                                    <Setter Property="Foreground" Value="#FCA5A5"/>
+                                    <Setter Property="BorderBrush" Value="#7F1D1D"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="7" Height="7" Fill="#EF4444" Margin="0,0,7,0"/>
+                        <TextBlock Text="{loc:Localization Logs.Error}" FontSize="12"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Stats -->
+                <StackPanel Orientation="Horizontal" Margin="24,0,0,0" VerticalAlignment="Center">
+                    <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}">
+                        <Run Text="{Binding TotalCount, Mode=OneWay}" Foreground="{StaticResource SubTextBrush}" FontWeight="SemiBold"/>
+                        <Run Text=" "/><Run Text="{loc:Localization Logs.Entries}"/>
+                    </TextBlock>
+                    <Border Background="#0A0F1A" CornerRadius="4" Padding="8,3" Margin="12,0,0,0">
+                        <TextBlock FontSize="10">
+                            <Run Text="&#xE783;" FontFamily="{StaticResource IconFont}" Foreground="#FCA5A5"/>
+                            <Run Text=" "/>
+                            <Run Text="{Binding ErrorCount, Mode=OneWay}" Foreground="#FCA5A5" FontWeight="SemiBold"/>
+                            <Run Text=" "/><Run Text="{loc:Localization Logs.ErrorsLabel}" Foreground="{StaticResource MutedTextBrush}"/>
+                        </TextBlock>
+                    </Border>
+                    <Border Background="#0A0F00" CornerRadius="4" Padding="8,3" Margin="6,0,0,0">
+                        <TextBlock FontSize="10">
+                            <Run Text="&#xE7BA;" FontFamily="{StaticResource IconFont}" Foreground="#FCD34D"/>
+                            <Run Text=" "/>
+                            <Run Text="{Binding WarningCount, Mode=OneWay}" Foreground="#FCD34D" FontWeight="SemiBold"/>
+                            <Run Text=" "/><Run Text="{loc:Localization Logs.WarningsLabel}" Foreground="{StaticResource MutedTextBrush}"/>
+                        </TextBlock>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- ═══ COLUMN HEADERS ═══ -->
+        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1" Padding="36,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{loc:Localization Logs.ColTime}" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBlock Grid.Column="1" Text="{loc:Localization Logs.ColLevel}" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBlock Grid.Column="2" Text="{loc:Localization Logs.ColCategory}" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedTextBrush}"/>
+                <TextBlock Grid.Column="3" Text="{loc:Localization Logs.ColMessage}" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource MutedTextBrush}"/>
+            </Grid>
+        </Border>
+
+        <!-- ═══ LOG ENTRIES ═══ -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <!-- Empty state -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,80"
+                            Visibility="{Binding TotalCount, Converter={StaticResource ZeroToVisibilityConverter}}">
+                    <TextBlock Text="&#xF000;" FontFamily="{StaticResource IconFont}"
+                               FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,14"
+                               Foreground="{StaticResource MutedTextBrush}" Opacity="0.4"/>
+                    <TextBlock Text="{loc:Localization Logs.Empty}" FontSize="15"
+                               HorizontalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+                </StackPanel>
+
+                <ItemsControl ItemsSource="{Binding Logs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="36,10" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='yyyy-MM-dd HH:mm:ss'}"
+                                                   FontFamily="{StaticResource MonoFont}" FontSize="12"
+                                                   Foreground="{StaticResource SubTextBrush}" VerticalAlignment="Center"/>
+
+                                        <Border Grid.Column="1" CornerRadius="4" Padding="8,3" HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#1A1A2E"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Level}" Value="Error">
+                                                            <Setter Property="Background" Value="#2D0808"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Level}" Value="Warning">
+                                                            <Setter Property="Background" Value="#1A1000"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Level}" Value="Information">
+                                                            <Setter Property="Background" Value="#0A0F1A"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding Level}" FontSize="10" FontWeight="SemiBold">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="{StaticResource SubTextBrush}"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Level}" Value="Error">
+                                                                <Setter Property="Foreground" Value="#FCA5A5"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Level}" Value="Warning">
+                                                                <Setter Property="Foreground" Value="#FCD34D"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Level}" Value="Information">
+                                                                <Setter Property="Foreground" Value="#93C5FD"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+
+                                        <TextBlock Grid.Column="2" Text="{Binding Category}" FontSize="12"
+                                                   Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" Margin="0,0,12,0"/>
+
+                                        <TextBlock Grid.Column="3" Text="{Binding Message}" FontSize="12"
+                                                   Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"
+                                                   TextWrapping="Wrap"/>
+                                    </Grid>
+
+                                    <!-- Exception detail (if present) -->
+                                    <Border Margin="180,8,0,0" Padding="12,8" CornerRadius="{StaticResource RadiusSM}"
+                                            Background="#1A0808" BorderBrush="#3D1515" BorderThickness="1"
+                                            Visibility="{Binding Exception, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <TextBlock Text="{Binding Exception}" FontSize="11" FontFamily="{StaticResource MonoFont}"
+                                                   Foreground="#FCA5A5" TextWrapping="Wrap"/>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

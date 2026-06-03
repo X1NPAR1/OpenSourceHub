@@ -2,6 +2,23 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.7] - 2026-06-03
+
+### Fixed (diagnosed from crash.log — exact root causes)
+- **TrendingPage crash (`XamlParseException` → `ArgumentException: a Style may not set the Style property`)**: the period filter buttons used `<Setter Property="Style" Value="{StaticResource PrimaryButtonStyle}"/>` inside a `DataTrigger` — WPF forbids a Style from setting the `Style` property of the element it is applied to. Replaced with `Background`/`BorderBrush`/`Foreground` setters (picked up via the template's TemplateBindings). Trending now opens correctly.
+- **Logs page render crash (`InvalidOperationException: '#FF1A1A2E' is not a valid value for 'Background'`)**: the global `DataGrid` style assigned a string/colour literal to `AlternatingRowBackground`, which WPF mis-typed when rendering rows. Replaced the entire Logs `DataGrid` with a lightweight, fully-localized custom list — no more DataGrid, no more crash.
+
+### Changed / Improved
+- **Logs page redesigned**: dedicated column header row, wider monospace timestamp column (no more cramped date/time), per-level coloured badges, hover highlight, inline red exception panel, and an empty state. Fully localized (subtitle, column titles, stat labels) in all 5 languages.
+- **Logo redesigned**: `AppLogoControl` is now a clean, static hexagon-hub mark — removed the perpetually-spinning dashed orbit ring and scattered glow nodes that looked cluttered in the sidebar and Settings.
+- **Sidebar footer cleaned up**: removed the tiny cramped logo block under "Sign Out"; replaced with a clean "XinPari Software · MIT" text line.
+- Localized the remaining hardcoded Trending strings (Refresh, loading).
+
+### Added
+- **Trending card actions**: each trending repository now has Add-to-Favorites, Copy-clone-URL, and Open-on-GitHub buttons. `TrendingViewModel` now injects `IFavoriteService`.
+
+---
+
 ## [1.2.6] - 2026-06-03
 
 ### Fixed
