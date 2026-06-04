@@ -2,6 +2,15 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.2] - 2026-06-04
+
+### Fixed / Improved — Security module (Stage 6)
+- **Full localization**: every previously hardcoded English string on the Security page (subtitle, empty-state title/description, scanning text, "no issues" message) is now translated in all 5 languages (EN/TR/RU/DE/NL).
+- **Robust scan**: 45-second timeout + re-entrancy guard so the spinner can never hang; proper `owner/repo` & URL parsing shared with the Analysis module; empty state hidden while loading.
+- **Try-a-demo shortcut**: one click runs a security scan on `OWASP/NodeGoat` (a deliberately vulnerable reference app) so the module can be explored without entering a repo.
+
+---
+
 ## [1.3.1] - 2026-06-04
 
 ### Added — Organizations module (Stage 5)

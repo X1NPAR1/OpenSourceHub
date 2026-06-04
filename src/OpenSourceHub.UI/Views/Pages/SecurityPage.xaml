@@ -17,11 +17,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="0,0,0,16">
                     <TextBlock Text="{loc:Localization Security.Title}"
                                FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextBrush}" Margin="0,0,0,3"/>
-                    <TextBlock Text="Assess security posture and identify risks"
+                    <TextBlock Text="{loc:Localization Security.Subtitle}"
                                FontSize="13" Foreground="{StaticResource MutedTextBrush}"/>
                 </StackPanel>
                 <Grid Grid.Row="1">
@@ -49,6 +50,17 @@
                         </StackPanel>
                     </Button>
                 </Grid>
+
+                <!-- Demo shortcut -->
+                <Button Grid.Row="2" Style="{StaticResource GhostButtonStyle}" HorizontalAlignment="Left"
+                        Margin="0,10,0,0" Command="{Binding LoadDemoCommand}"
+                        Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE9A9;" FontFamily="{StaticResource IconFont}" FontSize="12" Margin="0,0,6,0"/>
+                        <TextBlock Text="{loc:Localization Security.Demo}" FontSize="12"/>
+                        <TextBlock Text="  ·  OWASP/NodeGoat" FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Border>
 
@@ -60,19 +72,32 @@
                 <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
                             HorizontalAlignment="Center" Margin="0,100">
                     <controls:LoadingSpinnerControl Width="44" Height="44" HorizontalAlignment="Center" Margin="0,0,0,18"/>
-                    <TextBlock Text="Scanning repository security..." Style="{StaticResource CaptionStyle}"
+                    <TextBlock Text="{loc:Localization Security.Scanning}" Style="{StaticResource CaptionStyle}"
                                HorizontalAlignment="Center" FontSize="14"/>
                 </StackPanel>
 
-                <!-- Empty state -->
-                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
-                            HorizontalAlignment="Center" Margin="0,80">
+                <!-- Empty state (hidden while loading) -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,80">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Repository}" Value="{x:Null}"/>
+                                        <Condition Binding="{Binding IsLoading}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock Text="&#xE8D7;" FontFamily="{StaticResource IconFont}"
                                FontSize="56" HorizontalAlignment="Center" Margin="0,0,0,16"
                                Foreground="{StaticResource MutedTextBrush}" Opacity="0.4"/>
-                    <TextBlock Text="Enter a repository to scan" FontSize="18" FontWeight="SemiBold"
+                    <TextBlock Text="{loc:Localization Security.EmptyTitle}" FontSize="18" FontWeight="SemiBold"
                                HorizontalAlignment="Center" Foreground="{StaticResource TextBrush}" Margin="0,0,0,8"/>
-                    <TextBlock Text="Security analysis checks for maintenance issues, license compliance, and risk factors"
+                    <TextBlock Text="{loc:Localization Security.EmptyDesc}"
                                Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center"
                                FontSize="13" TextWrapping="Wrap" MaxWidth="420" TextAlignment="Center"/>
                 </StackPanel>
@@ -177,7 +202,7 @@
                             <TextBlock Text="{loc:Localization Security.NoAlerts}" FontSize="16"
                                        FontWeight="SemiBold" HorizontalAlignment="Center"
                                        Foreground="#34D399"/>
-                            <TextBlock Text="No security issues detected for this repository"
+                            <TextBlock Text="{loc:Localization Security.NoIssues}"
                                        FontSize="12" HorizontalAlignment="Center"
                                        Foreground="{StaticResource MutedTextBrush}" Margin="0,6,0,0"/>
                         </StackPanel>

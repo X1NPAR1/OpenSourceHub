@@ -30,30 +30,57 @@ public partial class SecurityViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task LoadDemoAsync()
+    {
+        SearchQuery = "OWASP/NodeGoat";
+        await AnalyzeAsync();
+    }
+
+    [RelayCommand]
     public async Task AnalyzeAsync()
     {
+        if (IsLoading) return;
         if (string.IsNullOrWhiteSpace(SearchQuery)) return;
-        var parts = SearchQuery.Trim().Replace("https://github.com/", "").Split('/');
-        if (parts.Length < 2) { Notifications.Error("Invalid format."); return; }
+
+        var (owner, name) = ParseRepositoryInput(SearchQuery);
+        if (owner == null || name == null)
+        {
+            Notifications.Error("Invalid repository format. Use 'owner/repo' or a GitHub URL.");
+            return;
+        }
 
         SetLoading(true, "Running security analysis...");
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(45));
+        var ct = cts.Token;
         try
         {
-            Repository = await _repoService.GetRepositoryAsync(parts[0], parts[1]);
-            if (Repository == null) { Notifications.Error("Repository not found."); return; }
+            var repo = await _repoService.GetRepositoryAsync(owner, name, ct);
+            if (repo == null)
+            {
+                Repository = null;
+                SetError("Repository not found. Check the owner/name and that you have access.");
+                return;
+            }
+            Repository = repo;
 
-            var alertsTask = _repoService.GetSecurityAlertsAsync(parts[0], parts[1]);
-            var analysisTask = _repoService.AnalyzeRepositoryAsync(parts[0], parts[1]);
+            var alertsTask = _repoService.GetSecurityAlertsAsync(owner, name, ct);
+            var analysisTask = _repoService.AnalyzeRepositoryAsync(owner, name, ct);
             await Task.WhenAll(alertsTask, analysisTask);
 
-            Analysis = await analysisTask;
-            var alertList = await alertsTask;
+            Analysis = analysisTask.Result;
+            var alertList = alertsTask.Result;
             Alerts = new ObservableCollection<SecurityAlert>(alertList);
 
             CriticalCount = alertList.Count(a => a.RiskLevel == Domain.Enums.SecurityRiskLevel.Critical);
             HighCount = alertList.Count(a => a.RiskLevel == Domain.Enums.SecurityRiskLevel.High);
             MediumCount = alertList.Count(a => a.RiskLevel == Domain.Enums.SecurityRiskLevel.Medium);
             LowCount = alertList.Count(a => a.RiskLevel == Domain.Enums.SecurityRiskLevel.Low);
+
+            ClearError();
+        }
+        catch (OperationCanceledException)
+        {
+            SetError("Security analysis timed out — GitHub may be slow or rate-limited.");
         }
         catch (Exception ex)
         {
@@ -63,6 +90,18 @@ public partial class SecurityViewModel : BaseViewModel
         {
             SetLoading(false);
         }
+    }
+
+    private static (string? owner, string? name) ParseRepositoryInput(string input)
+    {
+        input = input.Trim();
+        if (input.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase))
+        {
+            input = input["https://github.com/".Length..].TrimEnd('/');
+            if (input.EndsWith(".git", StringComparison.OrdinalIgnoreCase)) input = input[..^4];
+        }
+        var parts = input.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 2 ? (parts[0], parts[1]) : (null, null);
     }
 
     [RelayCommand]
