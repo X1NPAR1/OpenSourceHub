@@ -2,6 +2,18 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.5] - 2026-06-04
+
+### Tests (Stage 16)
+- **Test suite restored to green and expanded — 35 passing, 0 failing.**
+  - Fixed `SettingsServiceTests`: the service now takes an `IServiceScopeFactory`; added a `TestDb` helper that provides one backed by a unique in-memory database per test.
+  - Added AI-provider tests: `AiServiceFactory` returns the right service for each of the 5 providers; `AiModelCatalog` has models for every provider; `IsAvailable` reflects whether an API key is configured.
+  - Added Favorites category tests (assign, blank→General fallback, default category).
+  - Persisted-settings test now also covers the new Claude/Gemini/DeepSeek fields.
+  - Removed the placeholder `UnitTest1`.
+
+---
+
 ## [1.3.4] - 2026-06-04
 
 ### Added — Light / Dark theme switching (Stage 12)

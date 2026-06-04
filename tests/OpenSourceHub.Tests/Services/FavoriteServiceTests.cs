@@ -98,4 +98,42 @@ public class FavoriteServiceTests
         var favorites = await service.GetFavoritesAsync();
         favorites[0].Note.Should().Be("Great project!");
     }
+
+    [Fact]
+    public async Task UpdateCategory_SetsCategory()
+    {
+        using var ctx = CreateContext();
+        var service = new FavoriteService(ctx);
+
+        await service.AddFavoriteAsync(new FavoriteRepository { FullName = "test/repo", Owner = "test", Name = "repo" });
+        await service.UpdateCategoryAsync("test/repo", "Work");
+
+        var favorites = await service.GetFavoritesAsync();
+        favorites[0].Category.Should().Be("Work");
+    }
+
+    [Fact]
+    public async Task UpdateCategory_BlankFallsBackToGeneral()
+    {
+        using var ctx = CreateContext();
+        var service = new FavoriteService(ctx);
+
+        await service.AddFavoriteAsync(new FavoriteRepository { FullName = "test/repo", Owner = "test", Name = "repo" });
+        await service.UpdateCategoryAsync("test/repo", "   ");
+
+        var favorites = await service.GetFavoritesAsync();
+        favorites[0].Category.Should().Be("General");
+    }
+
+    [Fact]
+    public async Task NewFavorite_DefaultsToGeneralCategory()
+    {
+        using var ctx = CreateContext();
+        var service = new FavoriteService(ctx);
+
+        await service.AddFavoriteAsync(new FavoriteRepository { FullName = "test/repo", Owner = "test", Name = "repo" });
+
+        var favorites = await service.GetFavoritesAsync();
+        favorites[0].Category.Should().Be("General");
+    }
 }
