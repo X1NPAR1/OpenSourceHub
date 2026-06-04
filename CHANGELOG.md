@@ -2,6 +2,17 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.6] - 2026-06-04
+
+### Changed — Trending algorithm (Stage 3)
+- **Smarter trending ranking**: instead of sorting purely by star count, the Trending page now pulls a 100-repo candidate pool and re-ranks it with a composite **trend score**:
+  - **star velocity** (stars gained per day since creation) — surfaces fast-rising projects over old giants,
+  - **fork engagement** (log-dampened fork weight),
+  - **activity recency** (a bonus that decays the longer it's been since the last push, relative to the selected period).
+- Covered by unit tests (`TrendScoreTests`): a young fast-growing repo outranks an old high-star one; recent pushes add a recency bonus; scores are non-negative. **38 tests passing.**
+
+---
+
 ## [1.3.5] - 2026-06-04
 
 ### Tests (Stage 16)

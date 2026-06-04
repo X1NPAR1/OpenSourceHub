@@ -136,16 +136,29 @@ public class GitHubRepositoryService : IRepositoryService
             };
 
             var langFilter = language != null ? $" language:{language}" : "";
+            // Pull a larger candidate pool, then re-rank locally by a composite trending score.
             var searchReq = new SearchRepositoriesRequest($"stars:>10{langFilter}")
             {
                 Created = DateRange.GreaterThan(since),
                 SortField = RepoSearchSort.Stars,
                 Order = SortDirection.Descending,
-                PerPage = Math.Min(count, 100)
+                PerPage = 100
             };
 
             var results = await client.Search.SearchRepo(searchReq);
-            var list = results.Items.Select(MapRepository).ToList();
+            var periodDays = period switch
+            {
+                TrendPeriod.Daily => 1.0,
+                TrendPeriod.Monthly => 30.0,
+                _ => 7.0
+            };
+
+            var list = results.Items
+                .Select(MapRepository)
+                .OrderByDescending(r => CalculateTrendScore(r, periodDays))
+                .Take(count)
+                .ToList();
+
             _cache.Set(key, list, TimeSpan.FromHours(1));
             return list;
         }
@@ -154,6 +167,27 @@ public class GitHubRepositoryService : IRepositoryService
             _logger.LogError(ex, "Failed to get trending repositories");
             return [];
         }
+    }
+
+    /// <summary>
+    /// Composite "trending" score: star velocity (stars/day since creation),
+    /// fork engagement, and recent-activity recency. Higher = hotter right now.
+    /// </summary>
+    internal static double CalculateTrendScore(Domain.Entities.RepositoryInfo r, double periodDays)
+    {
+        var ageDays = Math.Max((DateTime.UtcNow - r.CreatedAt).TotalDays, 1.0);
+        var starVelocity = r.StargazersCount / ageDays;              // stars gained per day
+        var forkEngagement = Math.Log10(r.ForksCount + 1) * 3.0;     // dampened fork weight
+
+        // Recency: repos pushed more recently (relative to the window) score higher.
+        double recency = 0;
+        if (r.PushedAt is { } pushed)
+        {
+            var daysSincePush = Math.Max((DateTime.UtcNow - pushed.ToUniversalTime()).TotalDays, 0);
+            recency = Math.Max(0, (periodDays - daysSincePush) / periodDays) * 10.0;
+        }
+
+        return starVelocity + forkEngagement + recency;
     }
 
     public async Task<RepositoryAnalysis> AnalyzeRepositoryAsync(string owner, string name, CancellationToken ct = default)
