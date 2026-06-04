@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/версия-1.2.8-0078D4?style=flat-square" alt="Версия"/>
+<img src="https://img.shields.io/badge/версия-1.2.9-0078D4?style=flat-square" alt="Версия"/>
 <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square" alt=".NET"/>
 <img src="https://img.shields.io/badge/платформа-Windows-0078D4?style=flat-square" alt="Платформа"/>
 <img src="https://img.shields.io/badge/лицензия-MIT-10B981?style=flat-square" alt="Лицензия"/>
@@ -11,7 +11,7 @@
 
 Анализируй. Открывай. Создавай лучшее.
 
-[Скачать v1.2.8](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Сообщить об ошибке](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Предложить функцию](https://github.com/X1NPAR1/OpenSourceHub/issues)
+[Скачать v1.2.9](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Сообщить об ошибке](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Предложить функцию](https://github.com/X1NPAR1/OpenSourceHub/issues)
 
 </div>
 
@@ -155,5 +155,5 @@ OpenSourceHub/
 ---
 
 <div align="center">
-Сделано с ❤️ — <a href="https://github.com/X1NPAR1">X1NPAR1</a> · XinPari Software · Версия 1.2.8
+Сделано с ❤️ — <a href="https://github.com/X1NPAR1">X1NPAR1</a> · XinPari Software · Версия 1.2.9
 </div>

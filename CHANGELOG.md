@@ -2,6 +2,18 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.9] - 2026-06-04
+
+### Fixed — Analysis module (Stage 1 + 2)
+- **"Analyzing repository…" infinite spinner**: the GitHub API calls had no timeout, so a network stall or rate-limit left the `await` hanging forever and the `finally` (which resets the spinner) never ran. Added a hard 45-second `CancellationTokenSource` and a re-entrancy guard; the loading state is now **always** reset, even on timeout or error.
+- **Brittle analysis**: secondary data (contributors, security alerts) is now loaded in its own `try/catch` — a failure there shows a warning but no longer aborts the whole analysis or leaves the page stuck.
+- **State overlap**: the empty state is now hidden while loading (MultiDataTrigger on `Repository == null` AND `IsLoading == false`), so the spinner and the "Enter a repository" placeholder no longer render on top of each other.
+
+### Added — Analysis module
+- **Analyze your own repositories**: the page now loads your GitHub repositories on open and offers a picker next to the search box — selecting one analyzes it immediately. Falls back gracefully when not signed in.
+
+---
+
 ## [1.2.8] - 2026-06-04
 
 ### Fixed (definitive root cause from crash.log)

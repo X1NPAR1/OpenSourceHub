@@ -30,6 +30,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" Style="{StaticResource ModernTextBoxStyle}"
                              Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
@@ -39,7 +40,16 @@
                             <KeyBinding Key="Return" Command="{Binding AnalyzeCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
-                    <Button Grid.Column="1" Style="{StaticResource PrimaryButtonStyle}"
+
+                    <!-- Pick one of your own repositories -->
+                    <ComboBox Grid.Column="1" Width="210" Height="44" Margin="0,0,10,0"
+                              ItemsSource="{Binding MyRepositories, Mode=OneWay}"
+                              SelectedItem="{Binding SelectedMyRepository, Mode=TwoWay}"
+                              DisplayMemberPath="FullName"
+                              ToolTip="Analyze one of your repositories"
+                              Visibility="{Binding MyRepositories.Count, Converter={StaticResource ListCountToVisibilityConverter}}"/>
+
+                    <Button Grid.Column="2" Style="{StaticResource PrimaryButtonStyle}"
                             Command="{Binding AnalyzeCommand}" Height="44" Padding="20,0"
                             IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBoolConverter}}">
                         <StackPanel Orientation="Horizontal">
@@ -78,9 +88,22 @@
                                HorizontalAlignment="Center" FontSize="14"/>
                 </StackPanel>
 
-                <!-- Empty state -->
-                <StackPanel Visibility="{Binding Repository, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
-                            HorizontalAlignment="Center" Margin="0,80">
+                <!-- Empty state (only when no repo AND not loading) -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,80">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Repository}" Value="{x:Null}"/>
+                                        <Condition Binding="{Binding IsLoading}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock Text="&#xF13E;" FontFamily="{StaticResource IconFont}"
                                FontSize="56" HorizontalAlignment="Center" Margin="0,0,0,16"
                                Foreground="{StaticResource MutedTextBrush}" Opacity="0.4"/>
