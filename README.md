@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/version-1.3.3-0078D4?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-1.3.4-0078D4?style=flat-square" alt="Version"/>
 <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square" alt=".NET"/>
 <img src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square" alt="Platform"/>
 <img src="https://img.shields.io/badge/license-MIT-10B981?style=flat-square" alt="License"/>
@@ -11,7 +11,7 @@
 
 Analyze. Discover. Build Better.
 
-[Download v1.3.3](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
+[Download v1.3.4](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
 
 </div>
 

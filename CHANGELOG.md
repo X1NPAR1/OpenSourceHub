@@ -2,6 +2,14 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.4] - 2026-06-04
+
+### Added — Light / Dark theme switching (Stage 12)
+- **Runtime theme switch, no restart**: choosing Dark, Light, or System in Settings → Appearance now repaints the whole app instantly. Picking the theme applies it live (preview), and System follows the Windows app theme.
+- **Implementation**: `ThemeManager` mutates the shared `SolidColorBrush` resources' `Color` in place. Because every control references the same brush instance via `StaticResource`, changing the brush color propagates to the entire UI live — no dictionary swap, no `DynamicResource` migration, no restart. 14 surface/text/border brushes flip between curated dark and light palettes; brand/semantic colors stay constant.
+
+---
+
 ## [1.3.3] - 2026-06-04
 
 ### Added — Favorites categorization (Stage 8)

@@ -105,6 +105,8 @@ public partial class SettingsViewModel : BaseViewModel
         }
     }
 
+    partial void OnSelectedThemeChanged(AppTheme value) => Helpers.ThemeManager.Apply(value);
+
     partial void OnSelectedAiProviderChanged(AiProvider value)
     {
         var models = value switch
