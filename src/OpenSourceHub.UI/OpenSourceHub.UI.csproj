@@ -9,9 +9,9 @@
     <Deterministic>false</Deterministic>
     <AssemblyName>OpenSourceHub</AssemblyName>
     <RootNamespace>OpenSourceHub.UI</RootNamespace>
-    <AssemblyVersion>1.2.9.0</AssemblyVersion>
-    <FileVersion>1.2.9.0</FileVersion>
-    <Version>1.2.9</Version>
+    <AssemblyVersion>1.2.10.0</AssemblyVersion>
+    <FileVersion>1.2.10.0</FileVersion>
+    <Version>1.2.10</Version>
     <Product>OpenSourceHub</Product>
     <Company>XinPari Software</Company>
     <Copyright>© 2026 XinPari Software</Copyright>

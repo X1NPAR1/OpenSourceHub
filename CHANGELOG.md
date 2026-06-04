@@ -2,6 +2,15 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.2.10] - 2026-06-04
+
+### Fixed — Localization (Stage 4 + 9)
+- **Raw localization keys showing on screen**: 10 keys were referenced in XAML but never defined, so the UI rendered the literal key text (e.g. `Reports.Title`, `Compare.Add`, `Security.Scan`, `AI.Generate`, and the six `Score.*` dimension labels). All are now defined and translated in **all 5 languages** (EN/TR/RU/DE/NL).
+- Added a build-time verification that every `{loc:Localization …}` key used in XAML has a definition — the set is now complete (0 missing).
+- Confirmed runtime language switching propagates to every localized binding (the indexer binding re-evaluates on the manager's `PropertyChanged`).
+
+---
+
 ## [1.2.9] - 2026-06-04
 
 ### Fixed — Analysis module (Stage 1 + 2)
