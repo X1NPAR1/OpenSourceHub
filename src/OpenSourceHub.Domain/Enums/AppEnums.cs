@@ -8,7 +8,8 @@ public enum RepositoryHealthLevel { Critical, Poor, Fair, Good, Excellent }
 
 public enum SecurityRiskLevel { None, Low, Medium, High, Critical }
 
-public enum AiProvider { OpenAI, Ollama }
+// Values are persisted as int — append new providers, never reorder.
+public enum AiProvider { OpenAI = 0, Ollama = 1, Claude = 2, Gemini = 3, DeepSeek = 4 }
 
 public enum ReportFormat { PDF, Markdown, HTML }
 

@@ -157,6 +157,7 @@
                             </StackPanel>
                         </StackPanel>
 
+                        <!-- Provider selector -->
                         <Grid Margin="0,0,0,14">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -165,27 +166,45 @@
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="{loc:Localization Settings.AiProvider}" FontSize="13"
                                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
-                                <TextBlock Text="Choose between cloud or local AI" FontSize="11"
+                                <TextBlock Text="OpenAI · Claude · Gemini · DeepSeek · Ollama" FontSize="11"
                                            Foreground="{StaticResource MutedTextBrush}"/>
                             </StackPanel>
-                            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedAiProvider}"
-                                      SelectedValuePath="Tag" Height="36">
-                                <ComboBoxItem Content="OpenAI (Cloud)" Tag="{x:Static domain:AiProvider.OpenAI}"/>
-                                <ComboBoxItem Content="Ollama (Local)" Tag="{x:Static domain:AiProvider.Ollama}"/>
-                            </ComboBox>
+                            <ComboBox Grid.Column="1" Height="36"
+                                      ItemsSource="{Binding AvailableProviders, Mode=OneWay}"
+                                      SelectedItem="{Binding SelectedAiProvider, Mode=TwoWay}"/>
                         </Grid>
 
                         <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
 
+                        <!-- Model picker (cascades from provider) -->
                         <Grid Margin="0,0,0,14">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="240"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.OpenAiKey}" FontSize="13"
+                                <TextBlock Text="Model" FontSize="13"
                                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
-                                <TextBlock Text="Your OpenAI API key (sk-...)" FontSize="11"
+                                <TextBlock Text="Pick a model or type a custom one" FontSize="11"
+                                           Foreground="{StaticResource MutedTextBrush}"/>
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" Height="36" IsEditable="True"
+                                      ItemsSource="{Binding AvailableModels, Mode=OneWay}"
+                                      Text="{Binding CurrentModel, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                      FontFamily="{StaticResource MonoFont}"/>
+                        </Grid>
+
+                        <!-- API key (cloud providers) -->
+                        <Grid Margin="0,0,0,14"
+                              Visibility="{Binding IsOllama, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=invert}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="240"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="API Key" FontSize="13"
+                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
+                                <TextBlock Text="Stored locally, encrypted at rest" FontSize="11"
                                            Foreground="{StaticResource MutedTextBrush}"/>
                             </StackPanel>
                             <PasswordBox x:Name="ApiKeyBox" Grid.Column="1"
@@ -193,25 +212,8 @@
                                          Height="36" FontSize="12"/>
                         </Grid>
 
-                        <Grid Margin="0,0,0,14">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="240"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.OpenAiModel}" FontSize="13"
-                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
-                                <TextBlock Text="Default: gpt-4o-mini" FontSize="11"
-                                           Foreground="{StaticResource MutedTextBrush}"/>
-                            </StackPanel>
-                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
-                                     Text="{Binding OpenAiModel}" Height="36" FontSize="12"
-                                     FontFamily="{StaticResource MonoFont}"/>
-                        </Grid>
-
-                        <Border Height="1" Background="{StaticResource BorderSubtleBrush}" Margin="0,0,0,14"/>
-
-                        <Grid Margin="0,0,0,14">
+                        <!-- Ollama endpoint (local provider only) -->
+                        <Grid Visibility="{Binding IsOllama, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="240"/>
@@ -224,22 +226,6 @@
                             </StackPanel>
                             <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
                                      Text="{Binding OllamaEndpoint}" Height="36" FontSize="12"
-                                     FontFamily="{StaticResource MonoFont}"/>
-                        </Grid>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="240"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{loc:Localization Settings.OllamaModel}" FontSize="13"
-                                           Foreground="{StaticResource TextBrush}" Margin="0,0,0,2"/>
-                                <TextBlock Text="Default: llama3.2" FontSize="11"
-                                           Foreground="{StaticResource MutedTextBrush}"/>
-                            </StackPanel>
-                            <TextBox Grid.Column="1" Style="{StaticResource ModernTextBoxStyle}"
-                                     Text="{Binding OllamaModel}" Height="36" FontSize="12"
                                      FontFamily="{StaticResource MonoFont}"/>
                         </Grid>
                     </StackPanel>

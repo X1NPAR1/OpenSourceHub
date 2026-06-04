@@ -12,6 +12,12 @@ public class AppSettings
     public string? OpenAiModel { get; set; } = "gpt-4o-mini";
     public string OllamaEndpoint { get; set; } = "http://localhost:11434";
     public string? OllamaModel { get; set; } = "llama3.2";
+    public string? ClaudeApiKey { get; set; }
+    public string? ClaudeModel { get; set; } = "claude-sonnet-4-5";
+    public string? GeminiApiKey { get; set; }
+    public string? GeminiModel { get; set; } = "gemini-2.0-flash";
+    public string? DeepSeekApiKey { get; set; }
+    public string? DeepSeekModel { get; set; } = "deepseek-chat";
     public bool EnableNotifications { get; set; } = true;
     public bool EnableAnimations { get; set; } = true;
     public bool EnableAutoUpdate { get; set; } = true;

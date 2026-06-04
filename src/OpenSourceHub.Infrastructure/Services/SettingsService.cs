@@ -51,6 +51,12 @@ public class SettingsService : ISettingsService
             existing.OpenAiModel = settings.OpenAiModel;
             existing.OllamaEndpoint = settings.OllamaEndpoint;
             existing.OllamaModel = settings.OllamaModel;
+            existing.ClaudeApiKey = settings.ClaudeApiKey;
+            existing.ClaudeModel = settings.ClaudeModel;
+            existing.GeminiApiKey = settings.GeminiApiKey;
+            existing.GeminiModel = settings.GeminiModel;
+            existing.DeepSeekApiKey = settings.DeepSeekApiKey;
+            existing.DeepSeekModel = settings.DeepSeekModel;
             existing.EnableNotifications = settings.EnableNotifications;
             existing.EnableAnimations = settings.EnableAnimations;
             existing.EnableAutoUpdate = settings.EnableAutoUpdate;

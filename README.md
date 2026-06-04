@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/version-1.2.10-0078D4?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-1.3.0-0078D4?style=flat-square" alt="Version"/>
 <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square" alt=".NET"/>
 <img src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square" alt="Platform"/>
 <img src="https://img.shields.io/badge/license-MIT-10B981?style=flat-square" alt="License"/>
@@ -11,7 +11,7 @@
 
 Analyze. Discover. Build Better.
 
-[Download v1.2.10](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
+[Download v1.3.0](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
 
 </div>
 
@@ -30,7 +30,7 @@ Built with **.NET 10**, **WPF**, and **Clean Architecture**, it provides everyth
 | Feature | Description |
 |---------|-------------|
 | **Repository Analysis** | 6-dimensional health scoring: Activity, Maintenance, Security, Community, Popularity, Health |
-| **AI Insights** | OpenAI & Ollama powered summaries, adoption recommendations, improvement suggestions |
+| **AI Insights** | OpenAI · Claude · Gemini · DeepSeek · Ollama summaries, adoption recommendations, improvement suggestions |
 | **Security Center** | Risk detection across maintenance, license, and activity dimensions |
 | **Trending** | Discover rising repositories by language and time period |
 | **Compare** | Side-by-side comparison of up to 4 repositories |
@@ -38,7 +38,7 @@ Built with **.NET 10**, **WPF**, and **Clean Architecture**, it provides everyth
 | **Favorites** | Bookmark and annotate repositories for later review |
 | **Reports** | Export PDF, Markdown, and HTML reports |
 | **Logs** | Application event log with filtering and export |
-| **Settings** | Theme, language (EN/TR/RU), AI provider, cache, and notifications |
+| **Settings** | Theme, language (EN/TR/RU/DE/NL), AI provider, cache, and notifications |
 
 ---
 

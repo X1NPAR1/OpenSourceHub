@@ -25,6 +25,8 @@ public static class DependencyInjection
         services.AddMemoryCache();
         services.AddHttpClient();
         services.AddHttpClient<OllamaService>();
+        services.AddHttpClient<ClaudeService>();
+        services.AddHttpClient<GeminiService>();
 
         services.AddSingleton<IGitHubAuthService, GitHubAuthService>();
         services.AddSingleton<ISettingsService, SettingsService>();
@@ -35,6 +37,9 @@ public static class DependencyInjection
 
         services.AddScoped<OpenAiService>();
         services.AddScoped<OllamaService>();
+        services.AddScoped<ClaudeService>();
+        services.AddScoped<GeminiService>();
+        services.AddScoped<DeepSeekService>();
         services.AddScoped<AiServiceFactory>();
 
         return services;

@@ -2,6 +2,20 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.0] - 2026-06-04
+
+### Added — Multi-provider AI (Stage 7 + 12)
+- **Five AI providers**: OpenAI, **Claude (Anthropic)**, **Gemini (Google)**, **DeepSeek**, and Ollama. Each repository insight (summary, adoption, risk, improvements, Q&A) now works through any of them.
+  - Claude via the Anthropic Messages API; Gemini via the Google Generative Language API; DeepSeek via its OpenAI-compatible endpoint (reuses the OpenAI SDK with a custom base URL).
+- **Provider-aware Settings**: a single AI Provider dropdown drives a cascading **Model** picker (editable — choose a listed model or type your own) and a provider-specific **API key** field. Ollama shows its local endpoint instead of a key. Each provider keeps its own key + model.
+- **Per-provider persistence**: new `ClaudeApiKey/Model`, `GeminiApiKey/Model`, `DeepSeekApiKey/Model` columns (EF Core migration `AddAiProviderSettings`).
+
+### Changed — Architecture (SOLID / DRY)
+- Extracted all prompt engineering into a shared `AiServiceBase`; every provider now implements only `CompleteAsync` + `IsAvailable`. This removed the large prompt duplication that previously lived in both `OpenAiService` and `OllamaService`.
+- Added `AiModelCatalog` listing the selectable models per provider.
+
+---
+
 ## [1.2.10] - 2026-06-04
 
 ### Fixed — Localization (Stage 4 + 9)
