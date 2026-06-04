@@ -2,6 +2,15 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.1] - 2026-06-04
+
+### Added — Organizations module (Stage 5)
+- **Popular organization quick-picks**: the Organizations page now greets you with a grid of curated organizations (Microsoft, Google, Meta, Apple, Amazon, Netflix, Docker, Kubernetes, Vercel, OpenAI, GitHub, Torvalds), each with its avatar — click one to load it instantly.
+- **Robust lookup**: 45-second timeout + re-entrancy guard so the spinner can never hang; secondary data (members, repos) loads in its own try/catch and repos are sorted by stars.
+- Localized the loading text; empty state is hidden while loading (MultiDataTrigger).
+
+---
+
 ## [1.3.0] - 2026-06-04
 
 ### Added — Multi-provider AI (Stage 7 + 12)

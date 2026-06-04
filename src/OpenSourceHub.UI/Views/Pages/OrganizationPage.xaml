@@ -60,21 +60,75 @@
                 <StackPanel Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
                             HorizontalAlignment="Center" Margin="0,100">
                     <controls:LoadingSpinnerControl Width="44" Height="44" HorizontalAlignment="Center" Margin="0,0,0,18"/>
-                    <TextBlock Text="Loading organization..." Style="{StaticResource CaptionStyle}"
+                    <TextBlock Text="{loc:Localization Org.Loading}" Style="{StaticResource CaptionStyle}"
                                HorizontalAlignment="Center" FontSize="14"/>
                 </StackPanel>
 
-                <!-- Empty state -->
-                <StackPanel Visibility="{Binding Organization, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=invert}"
-                            HorizontalAlignment="Center" Margin="0,80">
+                <!-- Empty state with popular organization quick-picks -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,40">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Organization}" Value="{x:Null}"/>
+                                        <Condition Binding="{Binding IsLoading}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+
                     <TextBlock Text="&#xF136;" FontFamily="{StaticResource IconFont}"
-                               FontSize="56" HorizontalAlignment="Center" Margin="0,0,0,16"
+                               FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,14"
                                Foreground="{StaticResource MutedTextBrush}" Opacity="0.4"/>
                     <TextBlock Text="Search for an organization" FontSize="18" FontWeight="SemiBold"
                                HorizontalAlignment="Center" Foreground="{StaticResource TextBrush}" Margin="0,0,0,8"/>
-                    <TextBlock Text="Enter an organization name like microsoft, google, or facebook"
+                    <TextBlock Text="Type a name above, or pick a popular organization below"
                                Style="{StaticResource CaptionStyle}" HorizontalAlignment="Center"
-                               FontSize="13" TextWrapping="Wrap" MaxWidth="360" TextAlignment="Center"/>
+                               FontSize="13" Margin="0,0,0,28"/>
+
+                    <ItemsControl ItemsSource="{Binding PopularOrganizations}" HorizontalAlignment="Center" MaxWidth="720">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Margin="6" Cursor="Hand"
+                                        Command="{Binding DataContext.SelectOrgCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                        CommandParameter="{Binding Login}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="bd" Background="{StaticResource CardBrush}"
+                                                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                                    CornerRadius="{StaticResource RadiusMD}" Padding="20,14" Width="160">
+                                                <StackPanel>
+                                                    <controls:AvatarControl Width="40" Height="40"
+                                                        DisplayName="{Binding DisplayName}"
+                                                        ImageUrl="{Binding Login, StringFormat='https://github.com/{0}.png'}"
+                                                        HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                                    <TextBlock Text="{Binding DisplayName}" FontSize="13" FontWeight="SemiBold"
+                                                               Foreground="{StaticResource TextBrush}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Login, StringFormat='@{0}'}" FontSize="11"
+                                                               Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource BrandPrimaryBrush}"/>
+                                                    <Setter TargetName="bd" Property="Background" Value="{StaticResource CardHoverBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
 
                 <!-- Results -->
