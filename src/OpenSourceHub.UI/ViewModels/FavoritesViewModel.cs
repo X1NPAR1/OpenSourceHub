@@ -19,7 +19,12 @@ public partial class FavoritesViewModel : BaseViewModel
     [ObservableProperty] private string _editNote = string.Empty;
     [ObservableProperty] private string _searchText = string.Empty;
     [ObservableProperty] private string _sortBy = "Recently Added";
+    [ObservableProperty] private string _selectedCategory = AllCategories;
     [ObservableProperty] private bool _isEditingNote;
+    [ObservableProperty] private string _editCategory = "General";
+    [ObservableProperty] private ObservableCollection<string> _categories = [];
+
+    private const string AllCategories = "All Categories";
 
     public IReadOnlyList<string> SortOptions { get; } =
         new[] { "Recently Added", "Name (A-Z)", "Stars (High-Low)" };
@@ -36,6 +41,7 @@ public partial class FavoritesViewModel : BaseViewModel
         try
         {
             _all = (await _favorites.GetFavoritesAsync()).ToList();
+            RebuildCategories();
             ApplyFilterAndSort();
         }
         catch (Exception ex)
@@ -50,10 +56,24 @@ public partial class FavoritesViewModel : BaseViewModel
 
     partial void OnSearchTextChanged(string value) => ApplyFilterAndSort();
     partial void OnSortByChanged(string value) => ApplyFilterAndSort();
+    partial void OnSelectedCategoryChanged(string value) => ApplyFilterAndSort();
+
+    private void RebuildCategories()
+    {
+        var cats = _all.Select(f => string.IsNullOrWhiteSpace(f.Category) ? "General" : f.Category)
+                       .Distinct(StringComparer.OrdinalIgnoreCase)
+                       .OrderBy(c => c, StringComparer.OrdinalIgnoreCase)
+                       .ToList();
+        Categories = new ObservableCollection<string>(new[] { AllCategories }.Concat(cats));
+        if (!Categories.Contains(SelectedCategory)) SelectedCategory = AllCategories;
+    }
 
     private void ApplyFilterAndSort()
     {
         IEnumerable<FavoriteRepository> query = _all;
+
+        if (!string.IsNullOrEmpty(SelectedCategory) && SelectedCategory != AllCategories)
+            query = query.Where(r => (string.IsNullOrWhiteSpace(r.Category) ? "General" : r.Category) == SelectedCategory);
 
         if (!string.IsNullOrWhiteSpace(SearchText))
         {
@@ -104,6 +124,7 @@ public partial class FavoritesViewModel : BaseViewModel
         if (item == null) return;
         SelectedItem = item;
         EditNote = item.Note ?? string.Empty;
+        EditCategory = string.IsNullOrWhiteSpace(item.Category) ? "General" : item.Category;
         IsEditingNote = true;
     }
 
@@ -111,11 +132,15 @@ public partial class FavoritesViewModel : BaseViewModel
     private async Task SaveNoteAsync()
     {
         if (SelectedItem == null) return;
+        var category = string.IsNullOrWhiteSpace(EditCategory) ? "General" : EditCategory.Trim();
         await _favorites.UpdateNoteAsync(SelectedItem.FullName, EditNote);
+        await _favorites.UpdateCategoryAsync(SelectedItem.FullName, category);
         SelectedItem.Note = EditNote;
+        SelectedItem.Category = category;
         IsEditingNote = false;
+        RebuildCategories();
         ApplyFilterAndSort();
-        Notifications.Success("Note saved.");
+        Notifications.Success("Saved.");
     }
 
     [RelayCommand]

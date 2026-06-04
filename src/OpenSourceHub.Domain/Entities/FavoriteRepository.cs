@@ -10,5 +10,6 @@ public class FavoriteRepository
     public string? Language { get; set; }
     public int Stars { get; set; }
     public string? Note { get; set; }
+    public string Category { get; set; } = "General";
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
 }

@@ -2,6 +2,16 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.3.3] - 2026-06-04
+
+### Added — Favorites categorization (Stage 8)
+- **Categories**: every favorite can now be assigned a category (default "General"). New `Category` column persisted via EF Core migration `AddFavoriteCategory`.
+- **Category filter**: a dropdown in the toolbar filters the list by category (auto-built from the categories in use, plus "All Categories").
+- **Assign in the editor**: the favorite editor now has an editable category picker (choose an existing one or type a new one) alongside the note.
+- **Category badge** shown on each favorite card.
+
+---
+
 ## [1.3.2] - 2026-06-04
 
 ### Fixed / Improved — Security module (Stage 6)

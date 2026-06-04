@@ -9,4 +9,5 @@ public interface IFavoriteService
     Task RemoveFavoriteAsync(string fullName);
     Task<bool> IsFavoriteAsync(string fullName);
     Task UpdateNoteAsync(string fullName, string note);
+    Task UpdateCategoryAsync(string fullName, string category);
 }

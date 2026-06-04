@@ -45,4 +45,14 @@ public class FavoriteService : IFavoriteService
             await _db.SaveChangesAsync();
         }
     }
+
+    public async Task UpdateCategoryAsync(string fullName, string category)
+    {
+        var item = await _db.FavoriteRepositories.FirstOrDefaultAsync(f => f.FullName == fullName);
+        if (item != null)
+        {
+            item.Category = string.IsNullOrWhiteSpace(category) ? "General" : category.Trim();
+            await _db.SaveChangesAsync();
+        }
+    }
 }

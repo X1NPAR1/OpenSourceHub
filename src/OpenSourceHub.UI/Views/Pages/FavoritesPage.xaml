@@ -40,7 +40,8 @@
               Visibility="{Binding TotalCount, Converter={StaticResource ListCountToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
             <!-- Search box -->
@@ -62,8 +63,14 @@
                 </Grid>
             </Border>
 
+            <!-- Category filter -->
+            <ComboBox Grid.Column="1" Height="38" Margin="0,0,10,0"
+                      ItemsSource="{Binding Categories, Mode=OneWay}"
+                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                      ToolTip="Filter by category"/>
+
             <!-- Sort dropdown -->
-            <ComboBox Grid.Column="1" Height="38"
+            <ComboBox Grid.Column="2" Height="38"
                       ItemsSource="{Binding SortOptions, Mode=OneWay}"
                       SelectedItem="{Binding SortBy, Mode=TwoWay}"/>
         </Grid>
@@ -121,6 +128,14 @@
 
                                             <!-- Stats row -->
                                             <StackPanel Orientation="Horizontal">
+                                                <Border Background="#16213A" CornerRadius="6" Padding="8,3" Margin="0,0,6,0">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="&#xE8EC;" FontFamily="{StaticResource IconFont}"
+                                                                   FontSize="10" Foreground="{StaticResource BrandPrimaryBrush}" Margin="0,0,4,0"/>
+                                                        <TextBlock Text="{Binding Category}" FontSize="11"
+                                                                   Foreground="{StaticResource BrandPrimaryBrush}" FontWeight="SemiBold"/>
+                                                    </StackPanel>
+                                                </Border>
                                                 <Border Style="{StaticResource ChipStyle}" Padding="8,3" Margin="0,0,6,0"
                                                         Visibility="{Binding Language, Converter={StaticResource NullToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding Language}" FontSize="11"
@@ -196,13 +211,21 @@
                     BorderThickness="1" CornerRadius="{StaticResource RadiusLG}"
                     Width="480" Padding="28,24" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
-                    <TextBlock Text="Edit Note" FontSize="17" FontWeight="Bold"
+                    <TextBlock Text="Edit Favorite" FontSize="17" FontWeight="Bold"
                                Foreground="{StaticResource TextBrush}" Margin="0,0,0,4"/>
                     <TextBlock Text="{Binding SelectedItem.FullName}" FontSize="12"
                                Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,16"/>
+
+                    <TextBlock Text="Category" FontSize="12" Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,4"/>
+                    <ComboBox IsEditable="True" Height="36" Margin="0,0,0,14"
+                              ItemsSource="{Binding Categories, Mode=OneWay}"
+                              Text="{Binding EditCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ToolTip="Pick an existing category or type a new one"/>
+
+                    <TextBlock Text="Note" FontSize="12" Foreground="{StaticResource SubTextBrush}" Margin="0,0,0,4"/>
                     <TextBox Text="{Binding EditNote, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              Style="{StaticResource ModernTextBoxStyle}"
-                             Height="100" TextWrapping="Wrap" AcceptsReturn="True"
+                             Height="90" TextWrapping="Wrap" AcceptsReturn="True"
                              VerticalContentAlignment="Top" Margin="0,0,0,18"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Style="{StaticResource SecondaryButtonStyle}" Content="Cancel"
