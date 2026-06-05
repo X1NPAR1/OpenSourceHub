@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/version-1.3.6-0078D4?style=flat-square" alt="Version"/>
+<img src="https://img.shields.io/badge/version-1.4.0-0078D4?style=flat-square" alt="Version"/>
 <img src="https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square" alt=".NET"/>
 <img src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square" alt="Platform"/>
 <img src="https://img.shields.io/badge/license-MIT-10B981?style=flat-square" alt="License"/>
@@ -11,7 +11,7 @@
 
 Analyze. Discover. Build Better.
 
-[Download v1.3.6](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
+[Download v1.4.0](https://github.com/X1NPAR1/OpenSourceHub/releases/latest) · [Report Bug](https://github.com/X1NPAR1/OpenSourceHub/issues) · [Request Feature](https://github.com/X1NPAR1/OpenSourceHub/issues)
 
 </div>
 
@@ -35,7 +35,8 @@ Built with **.NET 10**, **WPF**, and **Clean Architecture**, it provides everyth
 | **Trending** | Discover rising repositories by language and time period |
 | **Compare** | Side-by-side comparison of up to 4 repositories |
 | **Organizations** | Explore GitHub organizations, members, and repositories |
-| **Favorites** | Bookmark and annotate repositories for later review |
+| **Repository Management** | Browse files, edit & commit, delete files, create branches, view pull requests (requires `repo` scope) |
+| **Favorites** | Bookmark, categorize, and annotate repositories |
 | **Reports** | Export PDF, Markdown, and HTML reports |
 | **Logs** | Application event log with filtering and export |
 | **Settings** | Theme, language (EN/TR/RU/DE/NL), AI provider, cache, and notifications |
@@ -132,30 +133,43 @@ OpenSourceHub/
 
 ## AI Configuration
 
-OpenSourceHub supports two AI providers:
+OpenSourceHub supports **five AI providers** — pick one in **Settings → AI**, choose a model (or type your own), and enter the provider's API key. Each provider keeps its own key + model.
 
-### OpenAI (Cloud)
-1. Go to **Settings → AI → Provider → OpenAI**
-2. Enter your OpenAI API key (`sk-...`)
-3. Set model (default: `gpt-4o-mini`)
+| Provider | Auth | Example models |
+|----------|------|----------------|
+| **OpenAI** (cloud) | API key | gpt-4o, gpt-4o-mini, gpt-4.1 |
+| **Claude** (Anthropic) | API key | claude-opus-4-5, claude-sonnet-4-5 |
+| **Gemini** (Google) | API key | gemini-2.0-flash, gemini-1.5-pro |
+| **DeepSeek** | API key | deepseek-chat, deepseek-reasoner |
+| **Ollama** (local) | endpoint | llama3.2, qwen2.5-coder, mistral |
 
-### Ollama (Local)
-1. Install [Ollama](https://ollama.com/) locally
-2. Pull a model: `ollama pull llama3.2`
-3. Go to **Settings → AI → Provider → Ollama**
-4. Set endpoint (default: `http://localhost:11434`) and model
+For Ollama, install it locally, `ollama pull llama3.2`, then set the endpoint (default `http://localhost:11434`).
 
 ---
 
-## Localization
+## Repository Management
 
-The application supports three languages, switchable at runtime from **Settings → Appearance → Language**:
+Open the **Repository** tab (requires a token with the `repo` scope) to:
+- pick one of your repositories and a branch,
+- browse the file tree and open files,
+- **edit & commit** a file, **create** a new file, **delete** a file,
+- **create a branch** from the current one,
+- view **open pull requests** (click to open on GitHub).
+
+---
+
+## Theme & Localization
+
+- **Theme**: Dark / Light / System — switches instantly at runtime (no restart).
+- **Languages** (runtime switch in Settings → Appearance):
 
 | Language | Code |
 |----------|------|
 | English  | EN   |
 | Türkçe   | TR   |
 | Русский  | RU   |
+| Deutsch  | DE   |
+| Nederlands | NL |
 
 ---
 

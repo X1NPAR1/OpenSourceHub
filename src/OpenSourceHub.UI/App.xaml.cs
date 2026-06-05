@@ -109,6 +109,7 @@ public partial class App : Application
         services.AddTransient<SecurityViewModel>();
         services.AddTransient<AiViewModel>();
         services.AddTransient<SettingsViewModel>();
+        services.AddTransient<RepositoryManagementViewModel>();
         services.AddTransient<FavoritesViewModel>();
         services.AddTransient<ReportsViewModel>();
         services.AddTransient<LogsViewModel>();
@@ -125,6 +126,7 @@ public partial class App : Application
         services.AddTransient<SecurityPage>();
         services.AddTransient<AiPage>();
         services.AddTransient<SettingsPage>();
+        services.AddTransient<RepositoryPage>();
         services.AddTransient<FavoritesPage>();
         services.AddTransient<ReportsPage>();
         services.AddTransient<LogsPage>();

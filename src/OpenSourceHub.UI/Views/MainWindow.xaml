@@ -130,7 +130,7 @@
                                    Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
                         <Border Background="{StaticResource BrandPrimaryBrush}" CornerRadius="3"
                                 Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center" Opacity="0.8">
-                            <TextBlock Text="v1.3.6" FontSize="9" FontWeight="SemiBold"
+                            <TextBlock Text="v1.4.0" FontSize="9" FontWeight="SemiBold"
                                        Foreground="White" VerticalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -292,6 +292,15 @@
                                 </Button>
 
                                 <TextBlock Text="MANAGE" Style="{StaticResource SectionLabelStyle}"/>
+
+                                <Button x:Name="RepositoryBtn" Style="{StaticResource NavItemStyle}"
+                                        Click="NavButton_Click" Tag="Repository">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE943;" FontFamily="{StaticResource IconFont}"
+                                                   FontSize="15" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Loc[Nav.Repository]}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
 
                                 <Button x:Name="FavoritesBtn" Style="{StaticResource NavItemStyle}"
                                         Click="NavButton_Click" Tag="Favorites">

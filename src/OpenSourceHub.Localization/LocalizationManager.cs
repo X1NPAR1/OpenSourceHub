@@ -65,6 +65,7 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Favorites"] = "Favorites",
         ["Nav.Logs"] = "Logs",
         ["Nav.Settings"] = "Settings",
+        ["Nav.Repository"] = "Repository",
 
         ["Auth.SignIn"] = "Sign in with GitHub",
         ["Auth.SignOut"] = "Sign Out",
@@ -344,6 +345,7 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Favorites"] = "Favoriler",
         ["Nav.Logs"] = "Kayıtlar",
         ["Nav.Settings"] = "Ayarlar",
+        ["Nav.Repository"] = "Depo Yönetimi",
 
         ["Auth.SignIn"] = "GitHub ile Giriş Yap",
         ["Auth.SignOut"] = "Çıkış Yap",
@@ -623,6 +625,7 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Favorites"] = "Избранное",
         ["Nav.Logs"] = "Журналы",
         ["Nav.Settings"] = "Настройки",
+        ["Nav.Repository"] = "Репозиторий",
 
         ["Auth.SignIn"] = "Войти через GitHub",
         ["Auth.SignOut"] = "Выйти",
@@ -901,6 +904,7 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Favorites"] = "Favoriten",
         ["Nav.Logs"] = "Protokolle",
         ["Nav.Settings"] = "Einstellungen",
+        ["Nav.Repository"] = "Repository",
         ["Auth.SignIn"] = "Mit GitHub anmelden",
         ["Auth.SignOut"] = "Abmelden",
         ["Auth.EnterToken"] = "GitHub Personal Access Token eingeben",
@@ -1164,6 +1168,7 @@ public class LocalizationManager : INotifyPropertyChanged
         ["Nav.Favorites"] = "Favorieten",
         ["Nav.Logs"] = "Logboeken",
         ["Nav.Settings"] = "Instellingen",
+        ["Nav.Repository"] = "Repository",
         ["Auth.SignIn"] = "Aanmelden met GitHub",
         ["Auth.SignOut"] = "Afmelden",
         ["Auth.EnterToken"] = "GitHub Personal Access Token invoeren",

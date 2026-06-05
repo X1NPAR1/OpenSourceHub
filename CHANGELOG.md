@@ -2,6 +2,26 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
+## [1.4.0] - 2026-06-04
+
+### Added — Repository Management (Stage 10 + 13)
+- **New "Repository" tab** for write operations on your own repos (requires a token with the `repo` scope):
+  - pick a repository + branch,
+  - browse the file tree, open & **edit files and commit** them,
+  - **create** a new file, **delete** a file (each as a commit),
+  - **create a branch** from the current one,
+  - view **open pull requests** and open them on GitHub.
+- Backend `IRepositoryManagementService` (Octokit) with friendly error mapping for auth/permission/validation failures.
+- Localized `Nav.Repository` in all 5 languages.
+
+### Added — Installer (Stage 19)
+- **Professional Inno Setup installer** (`installer/OpenSourceHub.iss`): modern multi-language wizard (EN/TR/RU/DE/NL), MIT license page, custom install path, Start-menu + optional desktop shortcut, embedded app icon, uninstall support, .NET 10 Desktop Runtime detection, and optional launch-after-install. See `installer/README.md` for how to build the `.exe`.
+
+### Docs
+- README updated: 5 AI providers table, Repository Management section, Theme & 5-language localization.
+
+---
+
 ## [1.3.6] - 2026-06-04
 
 ### Changed — Trending algorithm (Stage 3)

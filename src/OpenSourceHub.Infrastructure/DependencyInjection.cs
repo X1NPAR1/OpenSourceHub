@@ -31,6 +31,7 @@ public static class DependencyInjection
         services.AddSingleton<IGitHubAuthService, GitHubAuthService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddScoped<IRepositoryService, GitHubRepositoryService>();
+        services.AddScoped<IRepositoryManagementService, GitHubRepositoryManagementService>();
         services.AddScoped<IOrganizationService, GitHubOrganizationService>();
         services.AddScoped<ILogService, LogService>();
         services.AddScoped<IFavoriteService, FavoriteService>();
