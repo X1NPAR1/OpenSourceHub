@@ -2,7 +2,7 @@
 
 All notable changes to OpenSourceHub will be documented in this file.
 
-## [1.4.0] - 2026-06-04
+## [1.4.0] - 2026-06-05
 
 ### Added — Repository Management (Stage 10 + 13)
 - **New "Repository" tab** for write operations on your own repos (requires a token with the `repo` scope):
